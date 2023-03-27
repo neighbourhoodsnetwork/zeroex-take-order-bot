@@ -24,11 +24,7 @@ const main = async() => {
 
     exec('echo starting the Rain arbitrage bot...')  
 
-    
-        exec('node ./src/arbBot.js') 
-
-
-    
+    exec('node ./src/arbBot.js') 
 
 }
 
