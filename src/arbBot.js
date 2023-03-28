@@ -4,6 +4,7 @@ const { getOBInstance ,getZeroExInstance,  bnFromFloat, toFixed18} = require('./
 const orderConfig = require('./orderConfig.js')
 const config = require('./config.js')
 const timsort = require('timsort');
+const cron = require('node-cron');
 
 const ethers = require('ethers');
 
@@ -25,18 +26,15 @@ require('dotenv').config();
 
         // check the env variables before starting
         if (process.env.BOT_WALLET_PRIVATEKEY) {
-            signer = new ethers.Wallet(process.env.BOT_WALLET_PRIVATEKEY)
             if (process.env.RPC_URL) {  
                 network = process.env.NETWORK
-                provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL) 
-                signer.connect(provider)
+                provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL)  
+                signer = new ethers.Wallet(process.env.BOT_WALLET_PRIVATEKEY,provider)
                 chainId = (await provider.getNetwork()).chainId 
-                console.log("chainId : " , chainId )
                 let index = config.findIndex(v => Number(v.chainId) === chainId)
                 if (chainId && index > -1) {
                     api = config[index].apiUrl
                     trackedTokens = config[index].trackedTokens
-
                     // proxyAddress = config[index].proxyAddress
                     nativeToken = config[index].nativeToken.address
                     nativeTokenDecimals = config[index].nativeToken.decimals
@@ -61,29 +59,36 @@ require('dotenv').config();
         else throw new Error('bot wallet private key not defined') 
 
 
-        const orderBook = await getOBInstance(network,provider)  
+        const orderBook = await getOBInstance(network,signer)  
 
     
-        const arb = await getZeroExInstance(network,provider) 
+        const arb = await getZeroExInstance(network,signer) 
 
        // arrays of token initial token prices based oon WETH for initial match finding
         let priceDescending = [];
-        let priceAscending = [];    
+        let priceAscending = [];  
+        
+        //Cron Job to for Updating Price       
+        cron.schedule('*/1 * * * *', ()=>{
+            updatePriceArray()
+        }) 
+
+        //Cron Job for Reviweing Sloshed      
+        cron.schedule('*/2 * * * *', ()=>{ 
+            console.log('findMatch')
+            findMatch()
+        })  
 
 
-        const placeOrder = async(takeOrdersConfig, spender, data) => { 
-            await arb.connect(signer).arb(
-                takeOrdersConfig,
-                spender,
-                data
-            )
-        } 
+
+        
         
         const updatePriceArray = async function () {   
             
             try {  
                 console.log("Updating Price...")
-                let zexPriceArray = []  
+                let zexPriceArray = []   
+                
                 const responses = await Promise.allSettled(
                     trackedTokens.map(
                         async(e) => {
@@ -156,21 +161,29 @@ require('dotenv').config();
             // No need to fetch data from sg
             let slosh = orderConfig 
 
+            let vaultId = ethers.BigNumber.from(orderConfig.validOutputs[0].vaultId.hex)  
+
+            let inputTokenBalance = await orderBook.vaultBalance(
+                signer.address,
+                orderConfig.validInputs[0].token, 
+                vaultId
+            )   
+
             let outputTokenBalance = await orderBook.vaultBalance(
                 signer.address,
                 orderConfig.validOutputs[0].token, 
-                ethers.BigNumber.from(orderConfig.validOutputs[0].vaultId.hex).toString()
-                
-            )  
-            console.log("outputTokenBalance : ", outputTokenBalance.toString())
+                vaultId
+            )    
+
             
 
             let inputs_ = slosh.validInputs.map(
                 e => { 
                     return {
                         address : e.token,
-                        symbol : e.symbol,
-                        decimals: e.decimals
+                        symbol : "USDT", // hard coding for now 
+                        decimals: e.decimals,
+                        balance : inputTokenBalance
                     }
                 }
             )  
@@ -178,23 +191,20 @@ require('dotenv').config();
                      (e) => {   
                         return {
                             address : e.token, 
-                            symbol : e.symbol,
+                            symbol : "NHT", // hard coding for now 
                             decimals: e.decimals,
                             balance :  outputTokenBalance
                         }
                     }
                 ) 
             
-            console.log("inputs_ length : ", inputs_.length  )
-            console.log("outputs_ length  : ", outputs_.length )
-
 
             let possibleMatches = []
             let inputPrice
             for (let j = 0 ; j < outputs_.length ; j++) {
                 let output_ = outputs_[j];
 
-                if (output_.balance.gt(0)) { 
+                if (output_.balance.gt(0)) {  
                     for (let k = 0 ; k < inputs_.length ; k++ ) { 
                         if (inputs_[k].symbol != output_.symbol) {
                             inputPrice = priceDescending.filter(
@@ -203,9 +213,6 @@ require('dotenv').config();
                             let outputPrice = priceAscending.filter(
                                 e => e.address == inputs_[k].address
                             )[0]
-
-
-                            console.log("possible match found" )
                             
                             possibleMatches.push({
                                 outputToken : output_,
@@ -213,6 +220,9 @@ require('dotenv').config();
                                 inputIndex: k,
                                 outputIndex: j
                             }) 
+
+                            console.log("Possible Match")
+
                             
                         }
                     }
@@ -243,7 +253,7 @@ require('dotenv').config();
                         }&sellAmount=${
                             bestPossibleMatch.outputToken.balance.toString()
                         }&takerAddress=${
-                            signer.address
+                            signer.address.toLowerCase()
                         }`,
                         {
                             headers: {
@@ -269,13 +279,13 @@ require('dotenv').config();
                             }; 
                             
                             const takeOrdersConfigStruct = {
-                                output: bestPossibleMatch.inputToken,
-                                input: bestPossibleMatch.outputToken,
-                                minimumInput: bestPossibleMatch.balance,
-                                maximumInput: bestPossibleMatch.balance,
+                                output: bestPossibleMatch.inputToken.address,
+                                input: bestPossibleMatch.outputToken.address,
+                                minimumInput:bestPossibleMatch.outputToken.balance.toString(),
+                                maximumInput: bestPossibleMatch.outputToken.balance.toString(),
                                 maximumIORatio: ethers.BigNumber.from(
                                     "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
-                                  ),
+                                  ).toString(), // setting to max 
                                 orders: [takeOrder],
                             };
                             const spender = txQuote.allowanceTarget;
@@ -287,14 +297,15 @@ require('dotenv').config();
                 }
             }
             
-        }  
+        }   
 
-        await updatePriceArray() 
-        await findMatch()
-
-        
-
-
+        const placeOrder = async(takeOrdersConfig, spender, data) => { 
+            await arb.connect(signer).arb(
+                takeOrdersConfig,
+                spender,
+                data
+            )
+        } 
 
         
     } catch (error) {

@@ -1,6 +1,5 @@
 const { execSync } = require('child_process');
 const { argv } = require('process'); 
-const cron = require('node-cron');
 
 require('dotenv').config(); 
 

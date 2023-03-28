@@ -14,7 +14,6 @@ module.exports = {
           {
             "token": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
             "decimals": 6,
-            "symbol" : "USDT" , 
             "vaultId": {
               "type": "BigNumber",
               "hex": "0x05f3ff447c32b611352527c7afa8c3f7deee31428637a91cb3574f399b53b8fa"
@@ -24,8 +23,7 @@ module.exports = {
         "validOutputs": [
           {
             "token": "0x84342e932797FC62814189f01F0Fb05F52519708",
-            "decimals": 18,
-            "symbol" : "NHT" , 
+            "decimals": 18, 
             "vaultId": {
               "type": "BigNumber",
               "hex": "0x05f3ff447c32b611352527c7afa8c3f7deee31428637a91cb3574f399b53b8fa"

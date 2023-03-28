@@ -113,7 +113,7 @@ exports.getEtherscanKey = (network) => {
 
  
 
-exports.getOBInstance = async (network,provider) => {  
+exports.getOBInstance = async (network,signer) => {  
 
   console.log("network : " , network )
 
@@ -122,20 +122,21 @@ exports.getOBInstance = async (network,provider) => {
   const source = await axios.get(url);   
 
   // Get Orderbook Instance
-  const orderBook = new ethers.Contract(contractConfig[network].orderbook.address,source.data.result[0].ABI,provider) 
+  const orderBook = new ethers.Contract(contractConfig[network].orderbook.address,source.data.result[0].ABI,signer) 
 
   return orderBook
 } 
 
 
-exports.getZeroExInstance = async (network,provider) => { 
+exports.getZeroExInstance = async (network,signer) => { 
 
+  console.log("contractConfig[network].zeroexorderbook.address : " , contractConfig[network].zeroexorderbook.address )
   //Get Source code from contract
   const url = `${this.getEtherscanBaseURL(network)}?module=contract&action=getsourcecode&address=${contractConfig[network].zeroexorderbook.address}&apikey=${this.getEtherscanKey(network)}`;
   const source = await axios.get(url);   
 
   // Get Orderbook Instance
-  const zeroEx = new ethers.Contract(contractConfig[network].orderbook.address,source.data.result[0].ABI,provider) 
+  const zeroEx = new ethers.Contract(contractConfig[network].zeroexorderbook.address,source.data.result[0].ABI,signer) 
 
   return zeroEx 
 }
