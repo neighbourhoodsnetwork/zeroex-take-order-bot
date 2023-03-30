@@ -1,10 +1,10 @@
-const axios = require('axios'); 
-const ethers = require('ethers');
-const orders = require('./orders.js');
-const config = require('./config.js');
-const obAbi = require('./abis/OrderBook.json');
-const arbAbi = require('./abis/ZeroExOrderBookFlashBorrower.json');
-require('dotenv').config(); 
+const axios = require("axios"); 
+const ethers = require("ethers");
+const orders = require("./orders.js");
+const config = require("./config.js");
+const obAbi = require("./abis/OrderBook.json");
+const arbAbi = require("./abis/ZeroExOrderBookFlashBorrower.json");
+require("dotenv").config(); 
 
 const MAX_UINT_256 = ethers.constants.MaxUint256.toHexString();
 
@@ -33,13 +33,13 @@ const MAX_UINT_256 = ethers.constants.MaxUint256.toHexString();
                         signer
                     );
                 }
-                else throw new Error('network config not found');
+                else throw new Error("network config not found");
             }
-            else throw new Error('RPC not found');
+            else throw new Error("RPC not found");
         }
-        else throw new Error('bot wallet private key not found'); 
+        else throw new Error("bot wallet private key not found"); 
 
-        console.log('Checking the market price and submitting order...');
+        console.log("\nChecking the market price and submitting order...\n");
 
         for (let i = 0; i < orders.length; i++) {
             // @TODO - once sg is ready, read Order struct from sg
@@ -50,7 +50,7 @@ const MAX_UINT_256 = ethers.constants.MaxUint256.toHexString();
                 orders[i].validOutputs[0].vaultId
             );
 
-            console.log("Order's output vault balance:",  outputTokenBalance.toString());
+            console.log("Order's output vault balance:",  outputTokenBalance.toString(), "\n");
 
             const input_ =  {
                 address : orders[i].validInputs[0].token,
@@ -64,68 +64,78 @@ const MAX_UINT_256 = ethers.constants.MaxUint256.toHexString();
                 balance : outputTokenBalance
             };
 
-            const query = `${
-                api
-            }swap/v1/quote?buyToken=${
-                input_.address.toLowerCase()
-            }&sellToken=${
-                output_.address.toLowerCase()
-            }&sellAmount=${
-                outputTokenBalance.toString()
-            }`;
+            // only try to clear if vault balance is not zero
+            if (!outputTokenBalance.isZero()) {
+                const query = `${
+                    api
+                }swap/v1/quote?buyToken=${
+                    input_.address.toLowerCase()
+                }&sellToken=${
+                    output_.address.toLowerCase()
+                }&sellAmount=${
+                    outputTokenBalance.sub(2).toString()
+                }`;
 
-            const res = await axios.get(
-                query,
-                {
-                    headers: { 'accept-encoding': 'null' }
-                }
-            );
-
-            let txQuote = res?.data;
-            if (txQuote && txQuote.guaranteedPrice) {
-
-                console.log("submitting an order to clear...");
-
-                const takeOrder = {
-                    order: {
-                        owner: orders[i].owner,
-                        handleIO: orders[i].handleIO,
-                        evaluable: orders[i].evaluable,
-                        validInputs: orders[i].validInputs,
-                        validOutputs: orders[i].validOutputs
-                    },
-                    inputIOIndex: 0,
-                    outputIOIndex: 0,
-                    signedContext: [] 
-                };
-                const takeOrdersConfigStruct = {
-                    output: input_.address,
-                    input: output_.address,
-                    // max and min input should be exactly the same as qouted sell amount
-                    // sub 2 (default for NHT token) so not all the vault balance gets cleared
-                    // this makes sure the cleared order amount will exactly match the 0x qoute
-                    minimumInput: outputTokenBalance,
-                    maximumInput: outputTokenBalance,
-                    maximumIORatio: MAX_UINT_256,
-                    orders: [takeOrder],
-                };
-
-                // submit the transaction
-                arb.connect(signer).arb(
-                    takeOrdersConfigStruct,
-                    txQuote.allowanceTarget,
-                    txQuote.data,
+                const res = await axios.get(
+                    query,
                     {
-                        gasPrice: txQuote.gasPrice
-                        // gasLimit: txQoute.gasLimit
+                        headers: { "accept-encoding": "null" }
                     }
-                )
-                    .then(v => console.log(v))
-                    .catch(v => console.log(v));
+                );
+
+                let txQuote = res?.data;
+                if (txQuote && txQuote.guaranteedPrice) {
+
+                    console.log("submitting an order to clear...\n");
+
+                    const takeOrder = {
+                        order: {
+                            owner: orders[i].owner,
+                            handleIO: orders[i].handleIO,
+                            evaluable: orders[i].evaluable,
+                            validInputs: orders[i].validInputs,
+                            validOutputs: orders[i].validOutputs
+                        },
+                        inputIOIndex: 0,
+                        outputIOIndex: 0,
+                        signedContext: [] 
+                    };
+                    const takeOrdersConfigStruct = {
+                        output: input_.address,
+                        input: output_.address,
+                        // max and min input should be exactly the same as qouted sell amount
+                        // sub 2 (default for NHT token) so not all the vault balance gets cleared
+                        // this makes sure the cleared order amount will exactly match the 0x qoute
+                        minimumInput: outputTokenBalance.sub(2).toString(),
+                        maximumInput: outputTokenBalance.sub(2).toString(),
+                        maximumIORatio: MAX_UINT_256,
+                        orders: [takeOrder],
+                    };
+
+                    // submit the transaction
+                    arb.connect(signer).arb(
+                        takeOrdersConfigStruct,
+                        txQuote.allowanceTarget,
+                        txQuote.data,
+                        {
+                            gasPrice: txQuote.gasPrice
+                            // gasLimit: txQoute.gasLimit
+                        }
+                    )
+                        .then(v => {
+                            console.log(v);
+                            console.log("order submitted successfully, checking next order...\n");
+                        })
+                        .catch(v => {
+                            console.log(v);
+                            console.log("order did not submit successfully, checking next order...\n");
+                        });
+                }
             }
+            else console.log("output vault is empty, checking next order...\n");
         }
     } 
     catch (error) {
-        console.log("Error : " , error);
+        console.log("Error : " , error, "\n");
     }
 })();

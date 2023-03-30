@@ -1,6 +1,6 @@
-// const { argv } = require('process'); 
-const { execSync } = require('child_process');
-require('dotenv').config(); 
+// const { argv } = require("process"); 
+const { execSync } = require("child_process");
+require("dotenv").config(); 
 
 
 /**
@@ -11,7 +11,7 @@ require('dotenv').config();
  */
 const exec = (cmd) => {
     try {
-        return execSync(cmd, { stdio: 'inherit' });
+        return execSync(cmd, { stdio: "inherit" });
     } 
     catch (e) {
         throw new Error(`Failed to run command \`${cmd}\``);
@@ -20,14 +20,14 @@ const exec = (cmd) => {
  
 
 const main = async() => { 
-    exec('echo starting the Rain arbitrage bot...'); 
-    exec('node ./src/index.js'); 
+    exec("echo starting the Rain arbitrage bot..."); 
+    exec("node ./src/index.js"); 
 };
 
 main().then(
     () => {
         const exit = process.exit;
-        console.log('Rain arbitrage bot executed successfully!');
+        console.log("Rain arbitrage bot executed successfully!\n");
         exit(0);
     }
 ).catch(
