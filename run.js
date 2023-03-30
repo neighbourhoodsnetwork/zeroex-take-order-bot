@@ -26,7 +26,7 @@ const exec = (cmd) => {
  
 
 const main = async() => { 
-    console.log("\nStarting the Rain arbitrage bot..."); 
+    console.log("\nStarting the Rain arbitrage bot...\n"); 
     try {
         // check the env variables before starting
         if (process.env.BOT_WALLET_PRIVATEKEY) {
@@ -47,13 +47,13 @@ const main = async() => {
                         arbAbi.abi,
                         signer
                     );
-                    
+
                     // starting the bot internall process
                     await bot(signer, api, orderbook, arb);
                 }
                 else throw new Error("network config not found");
             }
-            else throw new Error("RPC not found");
+            else throw new Error("RPC URL not found");
         }
         else throw new Error("bot wallet private key not found"); 
     }

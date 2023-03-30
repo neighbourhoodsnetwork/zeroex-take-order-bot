@@ -8,7 +8,7 @@ module.exports = async(signer, api, orderbook, arb) => {
     const MAX_UINT_256 = ethers.constants.MaxUint256.toHexString();
 
     try {
-        console.log("\nChecking the market price and submitting order...\n");
+        console.log("Checking the market price and submitting order...\n");
 
         for (let i = 0; i < orders.length; i++) {
             // @TODO - once sg is ready, read Order struct from sg
