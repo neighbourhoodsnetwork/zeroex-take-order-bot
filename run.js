@@ -20,7 +20,7 @@ const exec = (cmd) => {
  
 
 const main = async() => { 
-    exec("echo starting the Rain arbitrage bot..."); 
+    exec("echo \"\nstarting the Rain arbitrage bot...\""); 
     exec("node ./src/index.js"); 
 };
 
