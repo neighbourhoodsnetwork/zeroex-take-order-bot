@@ -15,9 +15,9 @@ RPC_URL="<rpc-url-for-network>"
 <br>
 
 Next put the desired orders in the `./src/order.js` file, which bot will go over them in order to try to clear.
-The format should be valid `javascript` object and all properties of a valid Order struct is required.
-`validInputs` and `validOutputs` should only have one item each, if not, only the first items going to be used 
-by the bot and rest of themwill be ignored.
+The format should be valid `javascript` object and all properties of a valid Order struct are required.
+`validInputs` and `validOutputs` should only have one item each, if not, only the first item of each going to be used 
+by the bot and rest of them will be ignored.
 Example: 
 ```javascript
 {
