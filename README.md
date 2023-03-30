@@ -22,7 +22,7 @@ Example:
 ```javascript
 {
   owner: "owner address",
-  handleIO: false, 
+  handleIO: false, // true or false
   evaluable: {
     interpreter: "interpreter address",
     store: "store address",
