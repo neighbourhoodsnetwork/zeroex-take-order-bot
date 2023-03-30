@@ -1,44 +1,16 @@
 const axios = require("axios"); 
 const ethers = require("ethers");
 const orders = require("./orders.js");
-const config = require("./config.js");
-const obAbi = require("./abis/OrderBook.json");
-const arbAbi = require("./abis/ZeroExOrderBookFlashBorrower.json");
-require("dotenv").config(); 
+// const config = require("./config.js");
+// const obAbi = require("./abis/OrderBook.json");
+// const arbAbi = require("./abis/ZeroExOrderBookFlashBorrower.json");
+// require("dotenv").config(); 
 
-const MAX_UINT_256 = ethers.constants.MaxUint256.toHexString();
+module.exports = async(signer, api, orderbook, arb) => {
 
-(async () => {
-
-    let api, signer, chainId, provider, orderbook, arb;
-
+    const MAX_UINT_256 = ethers.constants.MaxUint256.toHexString();
+    // let api, orderbook, arb;
     try {
-        // check the env variables before starting
-        if (process.env.BOT_WALLET_PRIVATEKEY) {
-            if (process.env.RPC_URL) {
-                provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL);
-                signer = new ethers.Wallet(process.env.BOT_WALLET_PRIVATEKEY, provider);
-                chainId = (await provider.getNetwork()).chainId; 
-                let index = config.findIndex(v => v.chainId === chainId);
-                if (chainId && index > -1) {
-                    api = config[index].apiUrl;
-                    orderbook = new ethers.Contract(
-                        config[index].orderBookAddress,
-                        obAbi.abi,
-                        signer
-                    );
-                    arb = new ethers.Contract(
-                        config[index].arbAddress,
-                        arbAbi.abi,
-                        signer
-                    );
-                }
-                else throw new Error("network config not found");
-            }
-            else throw new Error("RPC not found");
-        }
-        else throw new Error("bot wallet private key not found"); 
-
         console.log("\nChecking the market price and submitting order...\n");
 
         for (let i = 0; i < orders.length; i++) {
@@ -132,10 +104,10 @@ const MAX_UINT_256 = ethers.constants.MaxUint256.toHexString();
                         });
                 }
             }
-            else console.log("output vault is empty, checking next order...\n");
+            else console.log("Order's output vault is empty, checking next order...\n");
         }
     } 
     catch (error) {
         console.log("Error : " , error, "\n");
     }
-})();
+};
