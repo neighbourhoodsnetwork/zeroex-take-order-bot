@@ -2,7 +2,14 @@ const axios = require("axios");
 const ethers = require("ethers");
 const orders = require("./orders.js");
 
-
+/**
+ * Handled arbitrage bot internall proceesses
+ * 
+ * @param {ethers.Wallet} signer - The bot ethers Wallet (signer)
+ * @param {string} api - The 0x api
+ * @param {ethers.Contract} orderbook - Orderbook ethers contract instance
+ * @param {ethers.Contract} arb - 0xOrderBookFlashBorrower ethers contract instance
+ */
 module.exports = async(signer, api, orderbook, arb) => {
 
     const MAX_UINT_256 = ethers.constants.MaxUint256.toHexString();
