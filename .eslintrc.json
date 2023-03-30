@@ -5,10 +5,8 @@
         "commonjs": true
     },
     "root": true,
-    "extends": [ "eslint:recommended" ],
-    "parserOptions": {
-        "ecmaVersion": "latest"
-    },
+    
+    "parserOptions": { "ecmaVersion": "latest" },
     "rules": {
         "semi": ["error", "always"],
         "indent": [

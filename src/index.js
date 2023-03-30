@@ -71,21 +71,15 @@ const MAX_UINT_256 = ethers.constants.MaxUint256.toHexString();
             }&sellToken=${
                 output_.address.toLowerCase()
             }&sellAmount=${
-                outputTokenBalance.sub("1000000000000000000").toString()
+                outputTokenBalance.toString()
             }`;
 
-            let res; 
-            try{
-                res = await axios.get(
-                    query,
-                    {
-                        headers: { 'accept-encoding': 'null' }
-                    }
-                );
-            }
-            catch (err) {
-                console.log(err);
-            }
+            const res = await axios.get(
+                query,
+                {
+                    headers: { 'accept-encoding': 'null' }
+                }
+            );
 
             let txQuote = res?.data;
             if (txQuote && txQuote.guaranteedPrice) {
@@ -110,25 +104,24 @@ const MAX_UINT_256 = ethers.constants.MaxUint256.toHexString();
                     // max and min input should be exactly the same as qouted sell amount
                     // sub 2 (default for NHT token) so not all the vault balance gets cleared
                     // this makes sure the cleared order amount will exactly match the 0x qoute
-                    minimumInput: outputTokenBalance.sub("1000000000000000000"),
-                    maximumInput: outputTokenBalance.sub("1000000000000000000"),
+                    minimumInput: outputTokenBalance,
+                    maximumInput: outputTokenBalance,
                     maximumIORatio: MAX_UINT_256,
                     orders: [takeOrder],
                 };
-                const data = txQuote.data;
-                // const gasLimit = txQuote.gasLimit;
-                const gasPrice = txQuote.gasPrice;
-                const spender = txQuote.allowanceTarget;
-                const tx = await arb.connect(signer).arb(
+
+                // submit the transaction
+                arb.connect(signer).arb(
                     takeOrdersConfigStruct,
-                    spender,
-                    data,
+                    txQuote.allowanceTarget,
+                    txQuote.data,
                     {
-                        gasPrice
-                        // gasLimit
+                        gasPrice: txQuote.gasPrice
+                        // gasLimit: txQoute.gasLimit
                     }
-                );
-                console.log((await tx.wait()));
+                )
+                    .then(v => console.log(v))
+                    .catch(v => console.log(v));
             }
         }
     } 
