@@ -1,15 +1,12 @@
 const axios = require("axios"); 
 const ethers = require("ethers");
 const orders = require("./orders.js");
-// const config = require("./config.js");
-// const obAbi = require("./abis/OrderBook.json");
-// const arbAbi = require("./abis/ZeroExOrderBookFlashBorrower.json");
-// require("dotenv").config(); 
+
 
 module.exports = async(signer, api, orderbook, arb) => {
 
     const MAX_UINT_256 = ethers.constants.MaxUint256.toHexString();
-    // let api, orderbook, arb;
+
     try {
         console.log("\nChecking the market price and submitting order...\n");
 
