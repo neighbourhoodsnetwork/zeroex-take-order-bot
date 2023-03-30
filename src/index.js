@@ -71,7 +71,7 @@ const MAX_UINT_256 = ethers.constants.MaxUint256.toHexString();
             }&sellToken=${
                 output_.address.toLowerCase()
             }&sellAmount=${
-                outputTokenBalance.sub("2000000000000000000").toString()
+                outputTokenBalance.sub("1000000000000000000").toString()
             }`;
 
             let res; 
@@ -109,8 +109,9 @@ const MAX_UINT_256 = ethers.constants.MaxUint256.toHexString();
                     input: output_.address,
                     // max and min input should be exactly the same as qouted sell amount
                     // sub 2 (default for NHT token) so not all the vault balance gets cleared
-                    minimumInput: outputTokenBalance.sub("2000000000000000000"),
-                    maximumInput: outputTokenBalance.sub("2000000000000000000"),
+                    // this makes sure the cleared order amount will exactly match the 0x qoute
+                    minimumInput: outputTokenBalance.sub("1000000000000000000"),
+                    maximumInput: outputTokenBalance.sub("1000000000000000000"),
                     maximumIORatio: MAX_UINT_256,
                     orders: [takeOrder],
                 };
