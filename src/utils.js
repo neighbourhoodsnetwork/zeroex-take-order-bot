@@ -1,7 +1,7 @@
 // const axios = require('axios');
-const obAbi = require('./abis/OrderBook.json');
+const obAbi = require('../abis/OrderBook.json');
 const { ethers, BigNumber } = require('ethers');
-const arbAbi = require('./abis/ZeroExOrderBookFlashBorrower.json');
+const arbAbi = require('../abis/ZeroExOrderBookFlashBorrower.json');
 
 
 /**

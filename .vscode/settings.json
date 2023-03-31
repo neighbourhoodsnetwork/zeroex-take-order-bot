@@ -1,0 +1,12 @@
+{
+  "json.schemas": [
+    {
+      "fileMatch": ["config.json"],
+      "url": "./schema/config.schema.json"
+    },
+    {
+      "fileMatch": ["orders.json"],
+      "url": "./schema/orders.schema.json"
+    }
+  ]
+}

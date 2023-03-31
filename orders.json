@@ -1,0 +1,21 @@
+[
+    {
+        "owner": "0x86aeF9BeaC77fee6f2165e515FcE6505F40afC27",
+        "handleIO": true,
+        "evaluable": {
+            "interpreter": "0xaE870f76CaF6EE851953303D66fCA0d836D62e22",
+            "store": "0xE45F955886fae8e64A4CdDd26F9e3DaF08A5ef85",
+            "expression": "0x88355b1c04e70cbf50a36a5a7d47bd29c97089e2"
+        },
+        "validInputs": [{
+            "token": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+            "decimals": 6,
+            "vaultId": "0x05f3ff447c32b611352527c7afa8c3f7deee31428637a91cb3574f399b53b8fa"
+        }],
+        "validOutputs": [{
+            "token": "0x84342e932797FC62814189f01F0Fb05F52519708",
+            "decimals": 18,
+            "vaultId": "0x05f3ff447c32b611352527c7afa8c3f7deee31428637a91cb3574f399b53b8fa"
+        }]
+    }
+]

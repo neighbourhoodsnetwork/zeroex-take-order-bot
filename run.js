@@ -1,10 +1,9 @@
 const ethers = require("ethers");
 const bot = require("./src/index");
+const orders = require("./orders");
 // const { argv } = require("process"); 
-const config = require("./src/config.js");
+const config = require("./config.json");
 const { execSync } = require("child_process");
-const obAbi = require("./src/abis/OrderBook.json");
-const arbAbi = require("./src/abis/ZeroExOrderBookFlashBorrower.json");
 
 require("dotenv").config(); 
 
@@ -23,7 +22,6 @@ const exec = (cmd) => {
         throw new Error(`Failed to run command \`${cmd}\``);
     }
 };
- 
 
 const main = async() => { 
     console.log("\nStarting the Rain arbitrage bot...\n"); 
@@ -33,23 +31,17 @@ const main = async() => {
             if (process.env.RPC_URL) {
                 const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL);
                 const signer = new ethers.Wallet(process.env.BOT_WALLET_PRIVATEKEY, provider);
-                const chainId = (await provider.getNetwork()).chainId; 
-                let index = config.findIndex(v => v.chainId === chainId);
-                if (chainId && index > -1) {
-                    const api = config[index].apiUrl;
-                    const orderbook = new ethers.Contract(
-                        config[index].orderBookAddress,
-                        obAbi.abi,
-                        signer
+                const chainId = (await provider.getNetwork()).chainId;
+                let configData = config.find(v => Number(v.chainId) === chainId);
+                if (chainId && configData) {
+                    // starting the order taker bot
+                    await bot(
+                        signer, 
+                        configData.apiUrl, 
+                        configData.orderBookAddress,
+                        configData.arbAddress,
+                        orders
                     );
-                    const arb = new ethers.Contract(
-                        config[index].arbAddress,
-                        arbAbi.abi,
-                        signer
-                    );
-
-                    // starting the bot internall process
-                    await bot(signer, api, orderbook, arb);
                 }
                 else throw new Error("network config not found");
             }
