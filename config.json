@@ -3,9 +3,8 @@
         "network": "polygon",
         "chainId": 137,
         "apiUrl": "https://polygon.api.0x.org/",
-        "defaultRpc": "",
-        "orderBookAddress": "0x8c025F3002B70511B4725d038B14dE4D5C7dA6cB",
-        "arbAddress": "0x9399464E07dc501534545C09f4e5c428C162076c",
+        "orderbookAddress" : "0x42cc063a0730a99ff2fc25218c606eb4969ca2eb",
+        "arbAddress" : "0x867fdf225b666a2f16bb4c08404c597c909399a5",
         "proxyAddress": "0xdef1c0ded9bec7f1a1670819833240f027b25eff",
         "nativeToken": {
             "symbol": "MATIC",
@@ -15,14 +14,117 @@
     },
     {
         "network": "mumbai",
-        "chainId": "0x80001",
+        "chainId": 524289,
         "apiUrl": "https://mumbai.api.0x.org/",
-        "defaultRpc": "",
-        "arbAddress": "0xd14ead3f35f1c034f9fe43316bf36edca2cb2b90",
-        "orderBookAddress": "0xe646c1bf3cb1223234ebd934d0257fc21ac141cf",
+        "arbAddress": "",
+        "orderbookAddress": "",
         "proxyAddress": "0xf471d32cb40837bf24529fcf17418fc1a4807626",
         "nativeToken": {
             "symbol": "MATIC",
+            "address": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "decimals": 18
+        }
+    },
+    {
+        "network": "homestead",
+        "chainId": 1,
+        "apiUrl": "https://api.0x.org/",
+        "arbAddress": "",
+        "orderbookAddress": "",
+        "proxyAddress": "0xdef1c0ded9bec7f1a1670819833240f027b25eff",
+        "nativeToken": {
+            "symbol": "ETH",
+            "address": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "decimals": 18
+        }
+    },
+    {
+        "network": "goerli",
+        "chainId": 5,
+        "apiUrl": "https://goerli.api.0x.org/",
+        "arbAddress": "",
+        "orderbookAddress": "",
+        "proxyAddress": "0xf91bb752490473b8342a3e964e855b9f9a2a668e",
+        "nativeToken": {
+            "symbol": "ETH",
+            "address": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "decimals": 18
+        }
+    },
+    {
+        "network": "avalanche",
+        "chainId": 43114,
+        "apiUrl": "https://avalanche.api.0x.org/",
+        "arbAddress": "",
+        "orderbookAddress": "",
+        "proxyAddress": "0xdef1c0ded9bec7f1a1670819833240f027b25eff",
+        "nativeToken": {
+            "symbol": "AVAX",
+            "address": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "decimals": 18
+        }
+    },
+    {
+        "network": "arbitrum",
+        "chainId": 42161,
+        "apiUrl": "https://arbitrum.api.0x.org/",
+        "arbAddress": "",
+        "orderbookAddress": "",
+        "proxyAddress": "0xdef1c0ded9bec7f1a1670819833240f027b25eff",
+        "nativeToken": {
+            "symbol": "ETH",
+            "address": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "decimals": 18
+        }
+    },
+    {
+        "network": "fantom",
+        "chainId": 250,
+        "apiUrl": "https://fantom.api.0x.org/",
+        "arbAddress": "",
+        "orderbookAddress": "",
+        "proxyAddress": "0xdef189deaef76e379df891899eb5a00a94cbc250",
+        "nativeToken": {
+            "symbol": "FTM",
+            "address": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "decimals": 18
+        }
+    },
+    {
+        "network": "bsc",
+        "chainId": 56,
+        "apiUrl": "https://bsc.api.0x.org/",
+        "arbAddress": "",
+        "orderbookAddress": "",
+        "proxyAddress": "0xdef1c0ded9bec7f1a1670819833240f027b25eff",
+        "nativeToken": {
+            "symbol": "BNB",
+            "address": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "decimals": 18
+        }
+    },
+    {
+        "network": "celo",
+        "chainId": 42220,
+        "apiUrl": "https://celo.api.0x.org/",
+        "arbAddress": "",
+        "orderbookAddress": "",
+        "proxyAddress": "0xdef1c0ded9bec7f1a1670819833240f027b25eff",
+        "nativeToken": {
+            "symbol": "CELO",
+            "address": "0x471EcE3750Da237f93B8E339c536989b8978a438",
+            "decimals": 18
+        }
+    },
+    {
+        "network": "optimism",
+        "chainId": 10,
+        "apiUrl": "https://optimism.api.0x.org/",
+        "arbAddress": "",
+        "orderbookAddress": "",
+        "proxyAddress": "0xdef1abe32c034e558cdd535791643c58a13acc10",
+        "nativeToken": {
+            "symbol": "ETH",
             "address": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
             "decimals": 18
         }

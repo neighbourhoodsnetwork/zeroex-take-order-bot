@@ -3,7 +3,7 @@
 export type Order = {
     /**
      * @title Order Owner
-     * @pattern ^0x[0-9a-zA-Z]{40}$
+     * @pattern ^0x[0-9a-fA-F]{40}$
      */
     owner: string;
     /**
@@ -17,17 +17,17 @@ export type Order = {
     evaluable: {
         /**
          * @title Interpreter Address
-         * @pattern ^0x[0-9a-zA-Z]{40}$
+         * @pattern ^0x[0-9a-fA-F]{40}$
          */
         interpreter: string;
         /**
          * @title Store Address
-         * @pattern ^0x[0-9a-zA-Z]{40}$
+         * @pattern ^0x[0-9a-fA-F]{40}$
          */
         store: string;
         /**
          * @title Expression Address
-         * @pattern ^0x[0-9a-zA-Z]{40}$ 
+         * @pattern ^0x[0-9a-fA-F]{40}$ 
          */
         expression: string;
     };
@@ -37,7 +37,7 @@ export type Order = {
     validInputs: {
         /**
          * @title Token Address
-         * @pattern ^0x[0-9a-zA-Z]{40}$
+         * @pattern ^0x[0-9a-fA-F]{40}$
          */
         token: string;
         /**
@@ -46,7 +46,7 @@ export type Order = {
         decimals: number;
         /**
          * @title Vault ID
-         * @pattern ^0x[0-9a-zA-Z]{64}$
+         * @pattern ^0x[0-9a-fA-F]{64}$
          */
         vaultId: string;
     }[];
@@ -56,7 +56,7 @@ export type Order = {
     validOutputs: {
         /**
          * @title Token Address
-         * @pattern ^0x[0-9a-zA-Z]{40}$
+         * @pattern ^0x[0-9a-fA-F]{40}$
          */
         token: string;
         /**
@@ -65,7 +65,7 @@ export type Order = {
         decimals: number;
         /**
          * @title Vault ID
-         * @pattern ^0x[0-9a-zA-Z]{64}$
+         * @pattern ^0x[0-9a-fA-F]{64}$
          */
         vaultId: string;
     }[]
@@ -85,26 +85,22 @@ export type Config = {
     chainId: string | number;
     /**
      * @title 0x API URL
-     * @pattern ^https://(.)+.api.0x.org/$
+     * @pattern ^https://.*api.0x.org/$
      */
     apiUrl: string;
     /**
-     * @title Default RPC URL
-     */
-    defaultRpc: string;
-    /**
      * @title Orderbook Contract Address
-     * @pattern ^0x[0-9a-zA-Z]{40}$
+     * @pattern ^0x[0-9a-fA-F]{40}$|^$
      */
-    orderBookAddress: string;
+    orderbookAddress: string;
     /**
      * @title 0xOrderbookFlashBorrower Contract Address
-     * @pattern ^0x[0-9a-zA-Z]{40}$
+     * @pattern ^0x[0-9a-fA-F]{40}$|^$
      */
     arbAddress: string;
     /**
      * @title 0x Proxy Address
-     * @pattern ^0x[0-9a-zA-Z]{40}$
+     * @pattern ^0x[0-9a-fA-F]{40}$
      */
     proxyAddress: string;
     /**
@@ -118,7 +114,7 @@ export type Config = {
         symbol: string;
         /**
          * @title Token Address
-         * @pattern ^0x[0-9a-zA-Z]{40}$
+         * @pattern ^0x[0-9a-fA-F]{40}$
          */
         address: string;
         /**
