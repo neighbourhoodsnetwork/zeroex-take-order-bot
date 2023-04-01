@@ -1,0 +1,117 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$ref": "#/definitions/Order",
+    "definitions": {
+        "Order": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "owner": {
+                        "type": "string",
+                        "title": "Order Owner",
+                        "pattern": "^0x[0-9a-fA-F]{40}$"
+                    },
+                    "handleIO": {
+                        "type": "boolean",
+                        "title": "Order Handle IO"
+                    },
+                    "evaluable": {
+                        "type": "object",
+                        "properties": {
+                            "interpreter": {
+                                "type": "string",
+                                "title": "Interpreter Address",
+                                "pattern": "^0x[0-9a-fA-F]{40}$"
+                            },
+                            "store": {
+                                "type": "string",
+                                "title": "Store Address",
+                                "pattern": "^0x[0-9a-fA-F]{40}$"
+                            },
+                            "expression": {
+                                "type": "string",
+                                "title": "Expression Address",
+                                "pattern": "^0x[0-9a-fA-F]{40}$"
+                            }
+                        },
+                        "required": [
+                            "interpreter",
+                            "store",
+                            "expression"
+                        ],
+                        "additionalProperties": false,
+                        "title": "Order Evaluable Struct",
+                        "description": "The evaluable struct of the Order"
+                    },
+                    "validInputs": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "token": {
+                                    "type": "string",
+                                    "title": "Token Address",
+                                    "pattern": "^0x[0-9a-fA-F]{40}$"
+                                },
+                                "decimals": {
+                                    "type": "number",
+                                    "title": "Token Decimals"
+                                },
+                                "vaultId": {
+                                    "type": "string",
+                                    "title": "Vault ID",
+                                    "pattern": "^0x[0-9a-fA-F]{64}$"
+                                }
+                            },
+                            "required": [
+                                "token",
+                                "decimals",
+                                "vaultId"
+                            ],
+                            "additionalProperties": false
+                        },
+                        "title": "Order Valid Inputs"
+                    },
+                    "validOutputs": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "token": {
+                                    "type": "string",
+                                    "title": "Token Address",
+                                    "pattern": "^0x[0-9a-fA-F]{40}$"
+                                },
+                                "decimals": {
+                                    "type": "number",
+                                    "title": "Token Decimals"
+                                },
+                                "vaultId": {
+                                    "type": "string",
+                                    "title": "Vault ID",
+                                    "pattern": "^0x[0-9a-fA-F]{64}$"
+                                }
+                            },
+                            "required": [
+                                "token",
+                                "decimals",
+                                "vaultId"
+                            ],
+                            "additionalProperties": false
+                        },
+                        "title": "Order Valid Outputs"
+                    }
+                },
+                "required": [
+                    "owner",
+                    "handleIO",
+                    "evaluable",
+                    "validInputs",
+                    "validOutputs"
+                ],
+                "additionalProperties": false
+            }
+        }
+    }
+}
