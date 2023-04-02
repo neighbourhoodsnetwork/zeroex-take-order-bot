@@ -1,4 +1,4 @@
-# Rain Order Taker Bot
+# 0x Take Order Bot
 A bot running on NodeJs environment for targeting sepcific Rain orderbook orders to clear against 0x liquidity (0x orders), this can also run on a github action (with cron job). The operating network will be derived from `RPC_URL` that is specified in `.env` file or passed as argument with `--rpc` flag.
 <bt>
 
