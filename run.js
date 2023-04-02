@@ -302,268 +302,278 @@ const main = async() => {
         const signer = new ethers.Wallet(args.key, provider);
         const chainId = (await provider.getNetwork()).chainId;
         const configData = config.find(v => Number(v.chainId) === chainId);
-        if (chainId && configData && orders && Array.isArray(orders)) {
 
-            console.log("Checking the market price...\n");
+        // checking required data validity
+        const obAdd = args.orderbook ? args.orderbook : configData.orderbookAddress;
+        const arbAdd = args.arb ? args.arb : configData.arbAddress;
+        if (!obAdd) throw "Undefined orderbook contract address";
+        if (!arbAdd) throw "Undefined arb contract address";
+        if (!chainId) throw "Undefined operating network";
+        if (!configData.api) throw "Undefined 0x api url";
+        if (!orders || !Array.isArray(orders)) throw "Invalid specified orders";
 
-            const obAdd = args.orderbook ? args.orderbook : configData.orderbookAddress;
-            const arbAdd = args.arb ? args.arb : configData.arbAddress;
-            if (!obAdd) throw "Undefined orderbook contract address";
-            if (!arbAdd) throw "Undefined arb contract address";
+        console.log("Checking the market price...\n");
 
-            const api = configData.apiUrl;
-            const orderbook = args.useEtherscan || args.etherscan 
-                ? getContract(obAdd, signer, args.etherscan) 
-                : new ethers.Contract(
-                    obAdd,
-                    obAbi,
-                    signer
-                );
-            const arb = args.useEtherscan || args.etherscan 
-                ? getContract(arbAdd, signer, args.etherscan) 
-                : new ethers.Contract(
-                    arbAdd,
-                    arbAbi,
-                    signer
-                );
+        const api = configData.apiUrl;
+        const orderbook = args.useEtherscan || args.etherscan 
+            ? getContract(obAdd, signer, args.etherscan) 
+            : new ethers.Contract(
+                obAdd,
+                obAbi,
+                signer
+            );
+        const arb = args.useEtherscan || args.etherscan 
+            ? getContract(arbAdd, signer, args.etherscan) 
+            : new ethers.Contract(
+                arbAdd,
+                arbAbi,
+                signer
+            );
 
-            // running over specified order
-            for (let i = 0; i < orders.length; i++) {
-                // @TODO - once sg is ready, read Order struct from sg
+        // running over specified order
+        for (let i = 0; i < orders.length; i++) {
+            // @TODO - once sg is ready, read Order struct from sg
 
-                // getting output vault balance to check if it's not empty to proceed
-                const outputTokenBalance = await orderbook.vaultBalance(
+            // getting output vault balance to check if it's not empty to proceed
+            const outputTokenBalance = await orderbook.vaultBalance(
+                orders[i].owner, 
+                orders[i].validOutputs[0].token, 
+                orders[i].validOutputs[0].vaultId
+            );
+
+            console.log("Order's output vault balance:",  outputTokenBalance.toString(), "\n");
+
+            // only try to clear if vault balance is not zero
+            if (!outputTokenBalance.isZero()) {
+
+                // getting input vault balance for eval context
+                const inputTokenBalance = await orderbook.vaultBalance(
                     orders[i].owner, 
-                    orders[i].validOutputs[0].token, 
-                    orders[i].validOutputs[0].vaultId
+                    orders[i].validInputs[0].token, 
+                    orders[i].validInputs[0].vaultId
                 );
 
-                console.log("Order's output vault balance:",  outputTokenBalance.toString(), "\n");
+                const input =  {
+                    address : orders[i].validInputs[0].token,
+                    decimals: orders[i].validInputs[0].decimals,
+                    vaultId: orders[i].validInputs[0].vaultId,
+                    balance: inputTokenBalance.toHexString()
+                };
+                const output = {
+                    address : orders[i].validOutputs[0].token, 
+                    decimals : orders[i].validOutputs[0].decimals, 
+                    vaultId : orders[i].validOutputs[0].vaultId, 
+                    balance : outputTokenBalance.toHexString()
+                };
 
-                // only try to clear if vault balance is not zero
-                if (!outputTokenBalance.isZero()) {
-
-                    // getting input vault balance for eval context
-                    const inputTokenBalance = await orderbook.vaultBalance(
-                        orders[i].owner, 
-                        orders[i].validInputs[0].token, 
-                        orders[i].validInputs[0].vaultId
-                    );
-
-                    const input =  {
-                        address : orders[i].validInputs[0].token,
-                        decimals: orders[i].validInputs[0].decimals,
-                        vaultId: orders[i].validInputs[0].vaultId,
-                        balance: inputTokenBalance.toHexString()
-                    };
-                    const output = {
-                        address : orders[i].validOutputs[0].token, 
-                        decimals : orders[i].validOutputs[0].decimals, 
-                        vaultId : orders[i].validOutputs[0].vaultId, 
-                        balance : outputTokenBalance.toHexString()
-                    };
-
-                    // calculate the order hash needed in context for eval
-                    const orderhash = ethers.utils.keccak256(
-                        ethers.utils.defaultAbiCoder.encode(
+                // calculate the order hash needed in context for eval
+                const orderhash = ethers.utils.keccak256(
+                    ethers.utils.defaultAbiCoder.encode(
+                        [
+                            "tuple(" 
+                                + "address,"
+                                + "bool,"
+                                + "tuple(address,address,address),"
+                                + "tuple[](address,uint8,uint256),"
+                                + "tuple[](address,uint8,uint256)" +
+                            ")"
+                        ],
+                        [[
+                            orders[i].owner, 
+                            orders[i].handleIO, 
                             [
-                                "tuple(" 
-                                    + "address,"
-                                    + "bool,"
-                                    + "tuple(address,address,address),"
-                                    + "tuple[](address,uint8,uint256),"
-                                    + "tuple[](address,uint8,uint256)" +
-                                ")"
-                            ],
+                                orders[i].evaluable.interpreter, 
+                                orders[i].evaluable.store, 
+                                orders[i].evaluable.expression
+                            ], 
                             [[
-                                orders[i].owner, 
-                                orders[i].handleIO, 
-                                [
-                                    orders[i].evaluable.interpreter, 
-                                    orders[i].evaluable.store, 
-                                    orders[i].evaluable.expression
-                                ], 
-                                [[
-                                    orders[i].validInputs[0].token, 
-                                    orders[i].validInputs[0].decimals, 
-                                    orders[i].validInputs[0].vaultId
-                                ]],
-                                [[
-                                    orders[i].validOutputs[0].token, 
-                                    orders[i].validOutputs[0].decimals, 
-                                    orders[i].validOutputs[0].vaultId
-                                ]]
+                                orders[i].validInputs[0].token, 
+                                orders[i].validInputs[0].decimals, 
+                                orders[i].validInputs[0].vaultId
+                            ]],
+                            [[
+                                orders[i].validOutputs[0].token, 
+                                orders[i].validOutputs[0].decimals, 
+                                orders[i].validOutputs[0].vaultId
                             ]]
-                        )
-                    );
+                        ]]
+                    )
+                );
 
-                    // eval the Calculate source to get the stack result in order to calculate the 0x quote 
-                    // sell amount, the quote amount should be minimum of maxOutput and output vault balance.
-                    // Orderbook address as signer, vital for getting correct eval results.
-                    const obAsSigner = new ethers.VoidSigner(
-                        orderbook.address,
-                        provider
-                    ); 
-                    const interpreter = new ethers.Contract(
+                // eval the Calculate source to get the stack result in order to calculate the 0x quote 
+                // sell amount, the quote amount should be minimum of maxOutput and output vault balance.
+                // Orderbook address as signer, vital for getting correct eval results.
+                const obAsSigner = new ethers.VoidSigner(
+                    orderbook.address,
+                    provider
+                ); 
+                const interpreter = args.useEtherscan || args.etherscan 
+                    ? getContract(
+                        orders[i].evaluable.interpreter, 
+                        obAsSigner, 
+                        args.etherscan
+                    ) 
+                    : new ethers.Contract(
                         orders[i].evaluable.interpreter,
                         interpreterAbi,
                         obAsSigner
                     );
-                    
-                    const { stack: [ maxOutput, ratio ] } = await interpreter.eval(
-                        orders[i].evaluable.store,
-                        orders[i].owner,
-                        orders[i].evaluable.expression + "00000002",
-                        // construct the context for eval
+                
+                const { stack: [ maxOutput, ratio ] } = await interpreter.eval(
+                    orders[i].evaluable.store,
+                    orders[i].owner,
+                    orders[i].evaluable.expression + "00000002",
+                    // construct the context for eval
+                    [
+                        [ 
+                            // base column 
+                            arb.address, 
+                            orderbook.address 
+                        ], 
                         [
-                            [ 
-                                // base column 
-                                arb.address, 
-                                orderbook.address 
-                            ], 
-                            [
-                                // calling context column 
-                                orderhash, 
-                                orders[i].owner, 
-                                arb.address 
-                            ], 
-                            [
-                                // empty context column 
-                            ], 
-                            [
-                                // input context column 
-                                input.address, 
-                                input.decimals, 
-                                input.vaultId, 
-                                input.balance, 
-                                "0" 
-                            ], 
-                            [
-                                // output context column 
-                                output.address, 
-                                output.decimals, 
-                                output.vaultId, 
-                                output.balance, 
-                                "0" 
-                            ], 
-                            [
-                                // empty context column
-                            ], 
-                            [
-                                // signed context column
-                            ] 
-                        ]
+                            // calling context column 
+                            orderhash, 
+                            orders[i].owner, 
+                            arb.address 
+                        ], 
+                        [
+                            // calculateIO context column 
+                        ], 
+                        [
+                            // input context column 
+                            input.address, 
+                            input.decimals, 
+                            input.vaultId, 
+                            input.balance, 
+                            "0" 
+                        ], 
+                        [
+                            // output context column 
+                            output.address, 
+                            output.decimals, 
+                            output.vaultId, 
+                            output.balance, 
+                            "0" 
+                        ], 
+                        [
+                            // empty context column
+                        ], 
+                        [
+                            // signed context column
+                        ] 
+                    ]
+                );
+
+                // take minimum of maxOutput and output vault balance for 0x qouting amount
+                const quoteAmount = outputTokenBalance.lte(maxOutput)
+                    ? ethers.BigNumber.from("500000000000000000")
+                    : maxOutput;
+
+                // only try to clear if quote amount is not zero
+                if (!quoteAmount.isZero()) {
+
+                    // get quote from 0x
+                    const response = await axios.get(
+                        `${
+                            api
+                        }swap/v1/quote?buyToken=${
+                            input.address.toLowerCase()
+                        }&sellToken=${
+                            output.address.toLowerCase()
+                        }&sellAmount=${
+                            quoteAmount.toString()
+                        }`,
+                        { headers: { "accept-encoding": "null" } }
                     );
 
-                    // take minimum of maxOutput and output vault balance for 0x qouting amount
-                    const quoteAmount = outputTokenBalance.lte(maxOutput)
-                        ? outputTokenBalance
-                        : maxOutput;
+                    // proceed if 0x quote is valid
+                    const txQuote = response?.data;
+                    if (txQuote && txQuote.guaranteedPrice) {
 
-                    // only try to clear if quote amount is not zero
-                    if (!quoteAmount.isZero()) {
+                        console.log("Checking the market price against order's ratio...\n");
 
-                        // get quote from 0x
-                        const response = await axios.get(
-                            `${
-                                api
-                            }swap/v1/quote?buyToken=${
-                                input.address.toLowerCase()
-                            }&sellToken=${
-                                output.address.toLowerCase()
-                            }&sellAmount=${
-                                quoteAmount.toString()
-                            }`,
-                            { headers: { "accept-encoding": "null" } }
-                        );
+                        // compare the ratio against the quote price and try to clear if 
+                        // quote price is greater or equal
+                        if (ethers.utils.parseUnits(txQuote.price).gte(ratio)) {
 
-                        // proceed if 0x quote is valid
-                        const txQuote = response?.data;
-                        if (txQuote && txQuote.guaranteedPrice) {
+                            console.log("Found a match, submitting an order to clear...\n");
 
-                            console.log("Checking the market price against order's ratio...\n");
+                            // construct the take order config
+                            const takeOrder = {
+                                order: {
+                                    owner: orders[i].owner,
+                                    handleIO: orders[i].handleIO,
+                                    evaluable: orders[i].evaluable,
+                                    validInputs: orders[i].validInputs,
+                                    validOutputs: orders[i].validOutputs
+                                },
+                                inputIOIndex: 0,
+                                outputIOIndex: 0,
+                                signedContext: []
+                            };
+                            const takeOrdersConfigStruct = {
+                                output: input.address,
+                                input: output.address,
+                                // max and min input should be exactly the same as quoted sell amount
+                                // this makes sure the cleared order amount will exactly match the 0x quote
+                                minimumInput: quoteAmount,
+                                maximumInput: quoteAmount,
+                                maximumIORatio: MAX_UINT_256,
+                                orders: [ takeOrder ],
+                            };
 
-                            // compare the ratio against the quote price and try to clear if 
-                            // quote price is greater or equal
-                            if (ethers.utils.parseUnits(txQuote.price).gte(ratio)) {
-
-                                console.log("Found a match, submitting an order to clear...\n");
-
-                                // construct the take order config
-                                const takeOrder = {
-                                    order: {
-                                        owner: orders[i].owner,
-                                        handleIO: orders[i].handleIO,
-                                        evaluable: orders[i].evaluable,
-                                        validInputs: orders[i].validInputs,
-                                        validOutputs: orders[i].validOutputs
-                                    },
-                                    inputIOIndex: 0,
-                                    outputIOIndex: 0,
-                                    signedContext: []
-                                };
-                                const takeOrdersConfigStruct = {
-                                    output: input.address,
-                                    input: output.address,
-                                    // max and min input should be exactly the same as quoted sell amount
-                                    // this makes sure the cleared order amount will exactly match the 0x quote
-                                    minimumInput: quoteAmount,
-                                    maximumInput: quoteAmount,
-                                    maximumIORatio: MAX_UINT_256,
-                                    orders: [ takeOrder ],
-                                };
-
-                                // submit the transaction
-                                arb.arb(
+                            // submit the transaction
+                            try {
+                                const tx = await arb.arb(
                                     takeOrdersConfigStruct,
                                     txQuote.allowanceTarget,
                                     txQuote.data,
                                     { gasPrice: txQuote.gasPrice }
-                                ).then(v => {
-                                    console.log(
-                                        "Transaction submitted successfully, waiting for receipt...\n"
-                                    );
-                                    v.wait().then(e => {
-                                        console.log(e, "\n");
-                                        console.log(
-                                            "Order cleared successfully, checking next order...\n"
-                                        );
-                                    }).catch(e => {
-                                        console.log(e, "\n");
-                                        console.log(
-                                            "Order did not clear, checking next order...\n"
-                                        );
-                                    });
-                                }).catch(v => {
-                                    console.log(v, "\n");
-                                    console.log(
-                                        "Transaction failed, checking next order...\n"
-                                    );
-                                });
+                                );
+                                console.log(tx, "\n");
+                                console.log("Transaction submitted successfully, checking next order...\n");
+                                // console.log(await tx.wait(), "\n");
+                                // console.log("Order cleared successfully, checking next order...\n");
                             }
-                            else console.log(
-                                "Market price is lower than order's ratio, checking next order...\n"
-                            );
+                            catch (_e) {
+                                console.log(_e, "\n");
+                                console.log( "Transaction failed, checking next order...\n");
+                            }
                         }
                         else console.log(
-                            "Did not get a valid 0x quote, checking next order...\n"
+                            "Market price is lower than order's ratio, checking next order...\n"
                         );
                     }
                     else console.log(
-                        "Order's max output is zero, checking next order...\n"
+                        "Did not get a valid 0x quote, checking next order...\n"
                     );
                 }
                 else console.log(
-                    "Order's output vault is empty, checking next order...\n"
+                    "Order's max output is zero, checking next order...\n"
                 );
             }
+            else console.log(
+                "Order's output vault is empty, checking next order...\n"
+            );
         }
-        else throw "Provided data is invalid!";
         return true;
     }
     catch (err) {
-        // console.log(err);
-        throw "An error occured during execution: \n\n\t" + (err.message ? err.message : err) + "\n";
+        const errMsgs = new RegExp([
+            /Invalid RPC URL/,
+            /Invalid orders file/,
+            /Invalid wallet private key/,
+            /Undefined orderbook contract address/,
+            /Undefined arb contract address/,
+            /Undefined operating network/,
+            /Undefined 0x api url/,
+            /Invalid specified orders/,
+        ]
+            .map(v => v.source)
+            .join("|")
+        );
+        if (typeof err === "string" && err.match(errMsgs)) console.log(err, "\n");
+        else throw "An error occured during execution: \n\n\t" + (err.message ? err.message : err) + "\n";
     }
 };
 
