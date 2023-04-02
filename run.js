@@ -557,20 +557,19 @@ const main = async() => {
         return true;
     }
     catch (err) {
-        const errMsgs = new RegExp([
-            /^Invalid RPC URL/,
-            /^Invalid orders file/,
-            /^Invalid wallet private key/,
-            /^Undefined orderbook contract address/,
-            /^Undefined arb contract address/,
-            /^Undefined operating network/,
-            /^Undefined 0x api url/,
-            /^Invalid specified orders/,
-        ]
-            .map(v => v.source)
-            .join("|")
-        );
-        if (typeof err === "string" && err.match(errMsgs)) console.log(err, "\n");
+        if (
+            typeof err === "string" && 
+            ( 
+                err.startsWith("Invalid RPC URL") 
+                || err.startsWith("Invalid orders file") 
+                || err.startsWith("Invalid wallet private key") 
+                || err.startsWith("Undefined orderbook contract address") 
+                || err.startsWith("Undefined arb contract address") 
+                || err.startsWith("Undefined operating network") 
+                || err.startsWith("Undefined 0x api url") 
+                || err.startsWith("Invalid specified orders") 
+            )
+        ) console.log(err, "\n");
         else throw "An error occured during execution: \n\n\t" + (err.message ? err.message : err) + "\n";
     }
 };
