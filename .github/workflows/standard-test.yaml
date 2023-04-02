@@ -3,7 +3,7 @@ name: Standard Test
 on: [push, pull_request]
 
 jobs:
-  build:
+  build-test-lint:
     runs-on: ubuntu-latest
 
     steps:

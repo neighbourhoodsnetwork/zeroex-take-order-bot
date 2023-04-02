@@ -8,7 +8,7 @@ on: [push, pull_request]
 #     - cron:  '0/5 * * * *'
 
 jobs:
-  build:
+  take-orders:
     runs-on: ubuntu-latest
 
     steps:
