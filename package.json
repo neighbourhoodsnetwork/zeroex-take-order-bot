@@ -1,18 +1,18 @@
 {
-  "name": "zeroex-github-action",
-  "description": "Rain aribitrage bot running in github actions to find matches for Orderbook specefied orders",
-  "version": "0.0.1",
+  "name": "zeroex-take-order-bot",
+  "description": "A bot running on NodeJs environment for targeting sepcific Rain orderbook orders to clear against 0x liquidity",
+  "version": "0.0.2",
   "license": "CAL-1.0",
   "author": "Rain Protocol",
-  "main": "./src/index.js",
+  "main": "./run.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/h20liquidity/zeroex-github-action.git"
+    "url": "git+https://github.com/h20liquidity/zeroex-take-order-bot.git"
   },
   "bugs": {
-    "url": "https://github.com/h20liquidity/zeroex-github-action/issues"
+    "url": "https://github.com/h20liquidity/zeroex-take-order-bot/issues"
   },
-  "homepage": "https://github.com/h20liquidity/zeroex-github-action#readme",
+  "homepage": "https://github.com/h20liquidity/zeroex-take-order-bot#readme",
   "scripts": {
     "lint": "eslint ./run.js",
     "lint-fix": "eslint ./run.js --fix",

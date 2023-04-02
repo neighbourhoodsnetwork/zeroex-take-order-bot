@@ -295,7 +295,7 @@ const main = async() => {
         );
     }
     else try {
-        console.log("\nStarting the Rain order taker...\n");
+        console.log("\nStarting the Rain 0x take order process...\n");
         const args = processArgs(argv);
         const orders = args.orders;
         const provider = new ethers.providers.JsonRpcProvider(args.rpc);
@@ -580,7 +580,7 @@ const main = async() => {
 main().then(
     (v) => {
         const exit = process.exit;
-        if (v) console.log("Rain take order bot executed successfully!\n");
+        if (v) console.log("Rain 0x take order process executed successfully!\n");
         exit(0);
     }
 ).catch(
