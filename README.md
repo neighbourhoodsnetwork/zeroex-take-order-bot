@@ -159,7 +159,7 @@ npm install
 ```
 <br>
 
-For starting the bot: 
+For starting the bot (pass cli arguments as desired): 
 ```bash
 node run.js
 ```
