@@ -2,6 +2,36 @@
 A bot running on NodeJs environment for targeting sepcific Rain orderbook orders to clear against 0x liquidity (0x orders), this can also run on a github action (with cron job). The operating network will be derived from `RPC_URL` that is specified in `.env` file or passed as argument with `--rpc` flag.
 <bt>
 
+## Adding Orders
+Make a json file (optionaly named `orders.json`) and specify the desired order(s) in it (see `./example.orders.json`). If the file is in any directory other than root directory of this repo then you need to specify its path when executing the `node run.js` using `-o` flag.<br>
+`validInputs` and `validOutputs` should only have one item each, if not, only the first item of each going to be used 
+by the bot and rest of them will be ignored and please be aware that orders must be of valid `Order` struct.<br>
+Example of an Order struct:
+```json
+{
+  "owner": "<owner address>",
+  "handleIO": "<true/false>",
+  "evaluable": {
+    "interpreter": "<interpreter address>",
+    "store": "<store address>",
+    "expression": "<order expression address>"
+  },
+  "validInputs": [{
+    "token": "<input token address>",
+    "decimals": "<token decimals, number>",
+    "vaultId": "<vault id>"
+  }],
+  "validOutputs": [{
+    "token": "<output token address>",
+    "decimals": "<token decimals>",
+    "vaultId": "<vault id>"
+  }]
+}
+```
+If you use vscode, schmeas in `./schema` folder will help you with tips, else you can use the schemas to validate the content manualy.
+Optionally you can set up your orders details in another file and pass the file path as an argument to cli with `--orders` flag.
+<br>
+
 ## Configurations
 Configurations can be set in the files and/or as cli arguments when executing the `node ./run.js`. If any cli argument is passed on, it will override their counterparts specified in the files.
 
@@ -74,36 +104,7 @@ OPTIMISM_API_KEY=""
 FTM_API_KEY=""
 ```
 `WALLET_KEY` will be used as the wallet that submits the transactions and `RPC_URL` will be the provider required for submitting transactions, the operating network also is derived from `RPC_URL`.
-All these value can also be provided through cli arguments with thier respective flag, please see CLI section for more info.
-<br>
-
-Specify desired order(s) in `./orders.json` which holds an array of `Order` structs to operate on. Orders must be of valid `Order` struct.
-`validInputs` and `validOutputs` should only have one item each, if not, only the first item of each going to be used 
-by the bot and rest of them will be ignored.
-Example of an order:
-```json
-{
-  "owner": "<owner address>",
-  "handleIO": "<true/false>",
-  "evaluable": {
-    "interpreter": "<interpreter address>",
-    "store": "<store address>",
-    "expression": "<order expression address>"
-  },
-  "validInputs": [{
-    "token": "<input token address>",
-    "decimals": "<token decimals, number>",
-    "vaultId": "<vault id>"
-  }],
-  "validOutputs": [{
-    "token": "<output token address>",
-    "decimals": "<token decimals>",
-    "vaultId": "<vault id>"
-  }]
-}
-```
-If you use vscode, schmeas in `./schema` folder will help you with tips, else you can use the schemas to validate the content manualy.
-Optionally you can set up your orders details in another file and pass the file path as an argument to cli with `--orders` flag.
+All these values can also be provided through cli arguments with thier respective flag, please see CLI section for more info.
 <br>
 
 In order to set the operating `Orderbook`, `ZeroExOrderBookFlashBorrower` contracts, specify them in `./config.json` in their respective fields, these will be the contracts that the bot tries to read and clear orders on. 
