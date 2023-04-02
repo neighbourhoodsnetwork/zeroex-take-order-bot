@@ -99,18 +99,17 @@ const _fromFixed18 = (bn, decimals) => {
  * @returns base etherscan utl
  */
 const getEtherscanBaseURL = (chainId) => { 
-    let url = "";
-    if (chainId === 1)          url = "https://api.etherscan.io/";
-    if (chainId === 5)          url = "https://api-goerli.etherscan.io/";
-    if (chainId === 10)         url = "https://api-optimistic.etherscan.io/";
-    if (chainId === 56)         url = "https://api.bscscan.com/";
-    if (chainId === 137)        url = "https://api.polygonscan.com/";
-    if (chainId === 250)        url = "https://api.ftmscan.com/";
-    if (chainId === 42161)      url = "https://api.arbiscan.io/";
-    if (chainId === 42220)      url = "https://api.celoscan.io/";
-    if (chainId === 43114)      url = "https://api.snowtrace.io/";
-    if (chainId === 524289)     url = "https://api-testnet.polygonscan.com/";
-    return url;
+    if (chainId === 1)          return "https://api.etherscan.io/";
+    if (chainId === 5)          return "https://api-goerli.etherscan.io/";
+    if (chainId === 10)         return "https://api-optimistic.etherscan.io/";
+    if (chainId === 56)         return "https://api.bscscan.com/";
+    if (chainId === 137)        return "https://api.polygonscan.com/";
+    if (chainId === 250)        return "https://api.ftmscan.com/";
+    if (chainId === 42161)      return "https://api.arbiscan.io/";
+    if (chainId === 42220)      return "https://api.celoscan.io/";
+    if (chainId === 43114)      return "https://api.snowtrace.io/";
+    if (chainId === 524289)     return "https://api-testnet.polygonscan.com/";
+    return "";
 };
 
 /**
@@ -121,18 +120,17 @@ const getEtherscanBaseURL = (chainId) => {
  * @returns etherscan api key
  */
 const getEtherscanKey = (chainId) => { 
-    let key = "";
-    if (chainId === 1)          key = process.env.ETHERSCAN_API_KEY;
-    if (chainId === 5)          key = process.env.ETHERSCAN_API_KEY;
-    if (chainId === 10)         key = process.env.OPTIMISM_API_KEY;
-    if (chainId === 56)         key = process.env.BSC_API_KEY;
-    if (chainId === 137)        key = process.env.POLYGONSCAN_API_KEY;
-    if (chainId === 250)        key = process.env.FTM_API_KEY;
-    if (chainId === 42161)      key = process.env.ARBITRUM_API_KEY;
-    if (chainId === 42220)      key = process.env.CELO_API_KEY;
-    if (chainId === 43114)      key = process.env.SNOWTRACE_API_KEY;
-    if (chainId === 524289)     key = process.env.POLYGONSCAN_API_KEY;
-    return key;
+    if (chainId === 1)          return process.env.ETHERSCAN_API_KEY;
+    if (chainId === 5)          return process.env.ETHERSCAN_API_KEY;
+    if (chainId === 10)         return process.env.OPTIMISM_API_KEY;
+    if (chainId === 56)         return process.env.BSC_API_KEY;
+    if (chainId === 137)        return process.env.POLYGONSCAN_API_KEY;
+    if (chainId === 250)        return process.env.FTM_API_KEY;
+    if (chainId === 42161)      return process.env.ARBITRUM_API_KEY;
+    if (chainId === 42220)      return process.env.CELO_API_KEY;
+    if (chainId === 43114)      return process.env.SNOWTRACE_API_KEY;
+    if (chainId === 524289)     return process.env.POLYGONSCAN_API_KEY;
+    return "";
 };
 
 /**
