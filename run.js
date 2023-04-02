@@ -466,7 +466,7 @@ const main = async() => {
 
                 // take minimum of maxOutput and output vault balance for 0x qouting amount
                 const quoteAmount = outputTokenBalance.lte(maxOutput)
-                    ? ethers.BigNumber.from("500000000000000000")
+                    ? outputTokenBalance
                     : maxOutput;
 
                 // only try to clear if quote amount is not zero
