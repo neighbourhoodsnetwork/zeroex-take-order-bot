@@ -162,4 +162,3 @@ For starting the bot:
 ```bash
 node run.js
 ```
-<br>
