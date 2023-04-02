@@ -147,7 +147,7 @@ Optionally with providing `--use-etherscan` or `--etherscan-key` you can force t
 <br>
 
 ## Running in Github Actions
-The process can be run in a github action, the configuration for it is available in `./.github/cron-job.yaml`. The schedule for triggering can be modified in the mentioned file.
+The process can be run in a github action, the configuration for it is available in `./.github/clear-orders.yaml`. The schedule for triggering can be modified in the mentioned file with cron syntax.
 Please be aware that github only allows cron to run at most every 5 minutes.
 
 ## Running Locally
