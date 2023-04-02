@@ -5,7 +5,7 @@
       "url": "./schema/config.schema.json"
     },
     {
-      "fileMatch": ["orders.json"],
+      "fileMatch": ["*orders.json"],
       "url": "./schema/orders.schema.json"
     }
   ]

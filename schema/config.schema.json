@@ -14,9 +14,13 @@
                         "pattern": "[a-zA-Z0-9]+"
                     },
                     "chainId": {
-                        "type": [
-                            "string",
-                            "number"
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "integer"
+                            }
                         ],
                         "title": "Network Chain ID"
                     },

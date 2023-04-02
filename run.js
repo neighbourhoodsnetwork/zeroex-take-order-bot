@@ -1,4 +1,5 @@
 const fs = require("fs");
+const Ajv = require("ajv");
 const path  = require("path");
 const axios = require("axios"); 
 const ethers = require("ethers"); 
@@ -6,6 +7,8 @@ const { argv } = require("process");
 const config = require("./config.json"); 
 const { execSync } = require("child_process"); 
 const { abi: obAbi } = require("./abis/OrderBook.json"); 
+const ordersSchema = require("./schema/orders.schema.json");
+const configSchema = require("./schema/config.schema.json");
 const { abi: interpreterAbi } = require("./abis/IInterpreterV1.json"); 
 const { abi: arbAbi } = require("./abis/ZeroExOrderBookFlashBorrower.json"); 
 
@@ -294,6 +297,8 @@ const main = async() => {
     }
     else try {
         console.log("\nStarting the Rain 0x take order process...\n");
+        const ajv = new Ajv();
+        if (!ajv.compile(configSchema)(config)) throw "Invalid config file!";
         const args = processArgs(argv);
         const orders = args.orders;
         const provider = new ethers.providers.JsonRpcProvider(args.rpc);
@@ -302,13 +307,14 @@ const main = async() => {
         const configData = config.find(v => Number(v.chainId) === chainId);
 
         // checking required data validity
-        const obAdd = args.orderbook ? args.orderbook : configData.orderbookAddress;
-        const arbAdd = args.arb ? args.arb : configData.arbAddress;
+        const obAdd = args.orderbook ? args.orderbook : configData?.orderbookAddress;
+        const arbAdd = args.arb ? args.arb : configData?.arbAddress;
         if (!obAdd) throw "Undefined orderbook contract address";
         if (!arbAdd) throw "Undefined arb contract address";
         if (!chainId) throw "Undefined operating network";
-        if (!configData.api) throw "Undefined 0x api url";
+        if (!configData?.apiUrl) throw "Undefined 0x api url";
         if (!orders || !Array.isArray(orders)) throw "Invalid specified orders";
+        if (!ajv.compile(ordersSchema)(orders)) throw "Invalid specified orders";
 
         console.log("Checking the market price...\n");
 
@@ -561,6 +567,7 @@ const main = async() => {
             typeof err === "string" && 
             ( 
                 err.startsWith("Invalid RPC URL") 
+                || err.startsWith("Invalid config file!")
                 || err.startsWith("Invalid orders file") 
                 || err.startsWith("Invalid wallet private key") 
                 || err.startsWith("Undefined orderbook contract address") 
