@@ -1,0 +1,33 @@
+name: Clear Orders
+
+on: [push, pull_request]
+
+# uncomment this to run the action on a cron job schedule
+# on:
+#   schedule:
+#     - cron:  '0/5 * * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Install NodeJS v16
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      # comment this job when using the cron schedule, this is only for test purpose
+      - name: Test Command
+        run: node ./run.js --help
+
+      # uncomment this job for clearing order
+      # - name: Take Orders
+      #   run: node ./run.js --key ${{ secrets.WALLET_KEY }} --rpc ${{ secrets.RPC_URL }}
