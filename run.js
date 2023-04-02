@@ -173,9 +173,9 @@ const processArgs = (params) => {
     const args = params.splice(2);
 
     // get orders file
-    if (args.includes("-o")) values.orders = args.splice(args.indexOf("-o"), 2)[1];
+    if (args.includes("--orders")) values.orders = args.splice(args.indexOf("--orders"), 2)[1];
+    else if (args.includes("-o")) values.orders = args.splice(args.indexOf("-o"), 2)[1];
     else if (args.includes("-O")) values.orders = args.splice(args.indexOf("-O"), 2)[1];
-    else if (args.includes("--orders")) values.orders = args.splice(args.indexOf("--orders"),2)[1];
     else values.orders = "./orders.json";
 
     // get rpc url
