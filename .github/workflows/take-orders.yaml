@@ -1,4 +1,4 @@
-name: Clear Orders
+name: Take Orders
 
 on: [push, pull_request]
 
