@@ -163,4 +163,3 @@ For starting the bot:
 node run.js
 ```
 <br>
-
