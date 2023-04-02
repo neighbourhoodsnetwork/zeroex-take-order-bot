@@ -3,10 +3,10 @@ A bot running on NodeJs environment for targeting sepcific Rain orderbook orders
 <bt>
 
 ## Adding Orders
-Make a json file (optionaly named `orders.json`) and specify the desired order(s) in it (see `./example.orders.json`). If the file is in any directory other than root directory of this repo then you need to specify its path when executing the `node run.js` using `-o` flag.<br>
+Make a json file (optionaly named `orders.json`) and specify the desired order(s) in it. If the file is in any directory other than root directory of this repo then you need to specify its path when executing the `node run.js` using `-o` flag.<br>
 `validInputs` and `validOutputs` should only have one item each, if not, only the first item of each going to be used 
 by the bot and rest of them will be ignored and please be aware that orders must be of valid `Order` struct.<br>
-Example of an Order struct:
+Example of an Order struct (see `./example.orders.json`):
 ```json
 {
   "owner": "<owner address>",
