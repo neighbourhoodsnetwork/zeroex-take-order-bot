@@ -558,14 +558,14 @@ const main = async() => {
     }
     catch (err) {
         const errMsgs = new RegExp([
-            /Invalid RPC URL/,
-            /Invalid orders file/,
-            /Invalid wallet private key/,
-            /Undefined orderbook contract address/,
-            /Undefined arb contract address/,
-            /Undefined operating network/,
-            /Undefined 0x api url/,
-            /Invalid specified orders/,
+            /^Invalid RPC URL/,
+            /^Invalid orders file/,
+            /^Invalid wallet private key/,
+            /^Undefined orderbook contract address/,
+            /^Undefined arb contract address/,
+            /^Undefined operating network/,
+            /^Undefined 0x api url/,
+            /^Invalid specified orders/,
         ]
             .map(v => v.source)
             .join("|")
