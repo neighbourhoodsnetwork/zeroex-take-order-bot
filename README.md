@@ -29,7 +29,7 @@ Example of an Order struct (see `./example.orders.json`):
   }]
 }
 ```
-If you use vscode, schmeas in `./schema` folder will help you with tips, else you can set your text editor to use the `./schema/config.schema.json` schema for your config file.<br>
+If you use vscode, schmeas in `./schema` folder will help you with tips, else you can set your text editor to use the `./schema/orders.schema.json` schema for your orders file.<br>
 Optionally you can set up your orders details in another file and pass the file path as an argument to cli with `--orders` flag.
 <br>
 
@@ -138,7 +138,7 @@ Example of a configuration:
   }
 ]
 ```
-If you use vscode, schmeas in `./schema` folder will help you with tips, else you can set your text editor to use the `./schema/orders.schema.json` schema for your orders file.
+If you use vscode, schmeas in `./schema` folder will help you with tips, else you can set your text editor to use the `./schema/config.schema.json` schema for the config file.
 <br>
 
 ## Contract ABIs
