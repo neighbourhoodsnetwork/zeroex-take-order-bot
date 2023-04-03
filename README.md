@@ -10,7 +10,8 @@ For an easy setup to get this working in github actions:<br><br>
 For details on how to add secrets to your repository please read [here](https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository).<br>
 For making a rpc url from your alchemy key for Polygon network (in case you only have the alchemy key), just replace the `YOUR-ALCHEMY-KEY` part with your key in here: https://polygon-mainnet.g.alchemy.com/v2/YOUR-ALCHEMY-KEY.<br>
 Alternatively you can get the HTTPS or Websocket rpc url of your prefered provider by following the instructions of your provider and add it as your `RPC_URL` secret.<br><br>
-2 - Add your orders into the `./orders.json` file, orders must be of valid Order struct, and `validInputs` and `validOutputs` should only have one item each. See `./example.orders.json` for an example of an order struct.<br><br>
+2 - Add your orders into the `./orders.json` file, orders must be of valid Order struct, and `validInputs` and `validOutputs` should only have one item each. See `./example.orders.json` for an example of an order struct.<br>
+You can also copy/paste the `scripts/DeployStrategy/orderDetails.json` content output from [neighbourhoods](https://github.com/h20liquidity/neighbourhoods) repository to the `./orders.json` file.<br><br>
 3 - Add `Orderbook` and `0xOrderBookFlashBorrower` contract addresses to the `./config.json` file under the network they are deployed on.<br><br>
 4 - Enable the `Take Orders` workflow in the actions tab of your forked repository, this is needed because scheduled workflows will be disabled by default for forked repositories. Please be aware that the first run may take a bit more time, so be patient after enabling this workflow.<br><br>
 5 - Optionally you can edit the schedule in `./github/workflows/take-orders.yaml` by modifying the cron syntax, by default it is set to run every 5 minutes.<br>
