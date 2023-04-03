@@ -1,5 +1,6 @@
 # 0x Take Order Bot
-A bot running on NodeJs environment for targeting sepcific Rain orderbook orders to clear against 0x liquidity (0x orders), this can also run on a github action (with cron job). The operating network will be derived from `RPC_URL` that is specified in `.env` file or passed as argument with `--rpc` flag.
+A bot running on NodeJs environment for targeting sepcific Rain orderbook orders to clear against 0x liquidity (0x orders), this can also run on a github action (with cron job).<br>
+The operating network will be derived from `RPC_URL` that is specified in `.env` file or passed as argument with `--rpc` flag.
 <bt>
 
 ## Adding Orders
@@ -28,7 +29,7 @@ Example of an Order struct (see `./example.orders.json`):
   }]
 }
 ```
-If you use vscode, schmeas in `./schema` folder will help you with tips, else you can use the schemas to validate the content manualy.
+If you use vscode, schmeas in `./schema` folder will help you with tips, else you can set your text editor to use the `./schema/config.schema.json` schema for your config file.<br>
 Optionally you can set up your orders details in another file and pass the file path as an argument to cli with `--orders` flag.
 <br>
 
@@ -103,11 +104,11 @@ CELO_API_KEY=""
 OPTIMISM_API_KEY=""
 FTM_API_KEY=""
 ```
-`WALLET_KEY` will be used as the wallet that submits the transactions and `RPC_URL` will be the provider required for submitting transactions, the operating network also is derived from `RPC_URL`.
-All these values can also be provided through cli arguments with thier respective flag, please see CLI section for more info.
+`WALLET_KEY` will be used as the wallet that submits the transactions and `RPC_URL` will be the provider required for submitting transactions.<br>
+All these values can alternatively be provided through cli with thier corresponding flag, please see CLI section for more info.
 <br>
 
-In order to set the operating `Orderbook`, `ZeroExOrderBookFlashBorrower` contracts, specify them in `./config.json` in their respective fields, these will be the contracts that the bot tries to read and clear orders on. 
+In order to set the operating `Orderbook`, `ZeroExOrderBookFlashBorrower` contracts, specify them in `./config.json` in their respective fields, these will be the contracts that the bot tries to read and clear orders on.<br>
 Example of a configuration:
 ```json
 [
@@ -139,20 +140,20 @@ Example of a configuration:
   }
 ]
 ```
-If you use vscode, schmeas in `./schema` folder will help you with tips, else you can use the schemas to validate the content manualy.
+If you use vscode, schmeas in `./schema` folder will help you with tips, else you can set your text editor to use the `./schema/orders.schema.json` schema for your orders file.
 <br>
 
 ## Contract ABIs
-By default the bot will get required contract ABIs (`OrderBook`, `ZeroExOrderBookFlashBorrower` and `IInterpreterV1`) from `./abis` folder, so if the contracts get updated the ABI files need to be updated as well.
-Optionally with providing `--use-etherscan` or `--etherscan-key` you can force to read contract ABIs from etherscan of the corresponding network, this assumes that the contracts are verified there.
+By default the bot will get required contract ABIs (`OrderBook`, `ZeroExOrderBookFlashBorrower` and `IInterpreterV1`) from `./abis` folder, so if the contracts get updated the ABI files need to be updated as well.<br>
+Optionally with providing `--use-etherscan` or `--etherscan-key` you can force to read contract ABIs from etherscan of the corresponding network, this assumes that the contracts are verified in etherscan.
 <br>
 
 ## Running in Github Actions
-The process can be run in a github action, the configuration for it is available in `./.github/take-orders.yaml`. The schedule for triggering can be modified in the mentioned file with cron syntax.<br>
-Please be aware that github only allows cron to run at most every 5 minutes and it is not garaunteed to run at specified schedule due to github resources being reserved, so sometimes it can take 10 or 15 or even more minutes longer than specified schedule time to run, therefore, it's not recommended to use GitHub Actions scheduled workflows for production tasks that require execution guarantee, please read [here](https://upptime.js.org/blog/2021/01/22/github-actions-schedule-not-working/) for more info.
+The process can be run in a github actions as a workflow, the configuration for it is available in `./.github/take-orders.yaml`. The schedule for triggering can be modified in the mentioned file with cron syntax (or any other form of triggering event for a github action of your choice).<br>
+Please be aware that github only allows scheduled workflows to run at most every 5 minutes and it is neither garaunteed to run at specified schedule due to github resources being reserved, so sometimes it can take 10 or 15 or even more minutes longer than specified schedule time to run, therefore, it's not recommended to use GitHub Actions scheduled workflows for production tasks that require execution guarantee, please read [here](https://upptime.js.org/blog/2021/01/22/github-actions-schedule-not-working/) for more info.
 
 ## Running Locally
-You need NodeJS installed locally on your machine.
+You need NodeJS installed locally on your machine.<br>
 Clone the repo and install Dependencies:
 ```bash
 npm install
