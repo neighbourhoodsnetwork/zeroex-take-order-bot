@@ -1,37 +1,21 @@
-[{
-  "sender": "0xE246F86675c73E339cB566383BA9d101959da3e1",
-  "expressionDeployer": "0xfdD0e5E4E31854A86f8173c18a8102377C454938",
-  "order": [
-    "0xE246F86675c73E339cB566383BA9d101959da3e1",
-    true,
-    [
-      "0x20b180D72846053646c9603c895e48aEd7f2c536",
-      "0xA10052499a68a96b47005676E5450d695CE86796",
-      "0x27c096523943cDEa08A00784b2149eB73b8c32A8"
-    ],
-    [
-      [
-        "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
-        6,
-        {
-          "type": "BigNumber",
-          "hex": "0x49c761d8fa42e77fbebb5188755954a3136509edd745f36fb25acb6818d302a5"
-        }
-      ]
-    ],
-    [
-      [
-        "0x84342e932797FC62814189f01F0Fb05F52519708",
-        18,
-        {
-          "type": "BigNumber",
-          "hex": "0x49c761d8fa42e77fbebb5188755954a3136509edd745f36fb25acb6818d302a5"
-        }
-      ]
-    ]
-  ],
-  "orderHash": {
-    "type": "BigNumber",
-    "hex": "0x42d1daae9560744bf0d3dda296266cdc0af0f23a93b48831d5953cc6688ecf07"
-  }
-}]
+[
+    {
+        "owner": "0xE246F86675c73E339cB566383BA9d101959da3e1",
+        "handleIO": true,
+        "evaluable": {
+            "interpreter": "0x20b180D72846053646c9603c895e48aEd7f2c536",
+            "store": "0xA10052499a68a96b47005676E5450d695CE86796",
+            "expression": "0x27c096523943cDEa08A00784b2149eB73b8c32A8"
+        },
+        "validInputs": [{
+            "token": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+            "decimals": 6,
+            "vaultId": "0x49c761d8fa42e77fbebb5188755954a3136509edd745f36fb25acb6818d302a5"
+        }],
+        "validOutputs": [{
+            "token": "0x84342e932797FC62814189f01F0Fb05F52519708",
+            "decimals": 18,
+            "vaultId": "0x49c761d8fa42e77fbebb5188755954a3136509edd745f36fb25acb6818d302a5"
+        }]
+    }
+]
