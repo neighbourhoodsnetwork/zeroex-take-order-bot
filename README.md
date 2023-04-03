@@ -15,7 +15,8 @@ You can also copy/paste the `./scripts/DeployStrategy/orderDetails.json` content
 3 - Add `Orderbook` and `0xOrderBookFlashBorrower` contract addresses to the `./config.json` file under the network they are deployed on.<br><br>
 4 - Enable the `Take Orders` workflow in the actions tab of your forked repository, this is needed because scheduled workflows will be disabled by default for forked repositories. Please be aware that the first run may take a bit more time, so be patient after enabling this workflow.<br><br>
 5 - Optionally you can edit the schedule in `./github/workflows/take-orders.yaml` by modifying the cron syntax, by default it is set to run every 5 minutes.<br>
-Please be aware that github scheduled workflows are not guaranteed to run at exact schedule because of github resource availability.
+Please be aware that github scheduled workflows are not guaranteed to run at exact schedule because of github resource availability.<br><br>
+6 - Once the workflow has started, you can go to the repository actions tab, see the `Take Orders` workflows runs list, click it and then click `take-orders` box and from he list of completed jobs you can view the "Take Orders" job by expanding it and see the log details (cleared amount, price, transaction hash, ...)
 <br>
 
 
