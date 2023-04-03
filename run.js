@@ -550,7 +550,7 @@ const main = async() => {
                                 console.log("Transaction submitted successfully to the network, see the link above for details, waiting for tx to mine...\n");
                                 try {
                                     await tx.wait();
-                                    console.log(`Clear amount: ${quoteAmount.toString()}`);
+                                    console.log(`Clear amount: ${ethers.utils.formatUnits(quoteAmount, output.decimals)}`);
                                     console.log(`Clear guaranteed price: ${txQuote.guaranteedPrice}`);
                                     console.log("Order cleared successfully, checking next order...\n");
                                 }
