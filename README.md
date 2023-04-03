@@ -5,7 +5,7 @@ The operating network will be derived from `RPC_URL` that is specified in `.env`
 
 
 # Easy Setup
-For a easy setup to get this working in github actions:<br><br>
+For an easy setup to get this working in github actions:<br><br>
 1 - Fork this repository and add your wallet private key as `WALLET_KEY` and rpc url as `RPC_URL` to your repository secrets. <br>
 For details on how to add secrets to your repository please read [here](https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository).<br>
 For making a rpc url from your alchemy key (in case you only have the alchemy key), just add the key to the end of this: https://polygon-mainnet.g.alchemy.com/v2/YOUR-ALCHEMY-KEY.<br>
