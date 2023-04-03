@@ -1,6 +1,6 @@
 name: Take Orders
 
-# modify the crob schedule to your desired schedule
+# modify the cron schedule to your desired schedule
 on:
   schedule:
     - cron:  '0/5 * * * *'

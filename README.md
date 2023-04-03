@@ -3,6 +3,23 @@ A bot running on NodeJs environment for targeting sepcific Rain orderbook orders
 The operating network will be derived from `RPC_URL` that is specified in `.env` file or passed as argument with `--rpc` flag.
 <bt>
 
+
+# Easy Setup
+For a easy setup to get this working in github actions:
+1 - Fork this repository and add your wallet private key as `WALLET_KEY` and rpc url as `RPC_URL` to your repository secrets. For details on how to add secrets to your repository please read [here](https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository).
+For making a rpc url from your alchemy key (in case you only have the alchemy key), just add the key to the end of this: https://polygon-mainnet.g.alchemy.com/v2/YOUR-ALCHEMY-KEY.
+Alternatively you can get the HTTPS or Websocket rpc url of your prefered provider by following the instructions of your provider and add it as your `RPC_URL` secret.
+2 - Add your orders into the `./orders.json` file, orders must be of valid Order struct, and `validInputs` and `validOutputs` should only have one item each. See `./example.orders.json` for an example of an order struct.
+3 - Add `Orderbook` and `0xOrderBookFlashBorrower` contract addresses to the `./config.json` file of the network they are deployed on.
+4 - Enable the `Take Orders` workflow in the actions tab of your forked repository, this is needed because scheduled workflows will be disabled by default for forked repositories.
+5 - Optionally you can edit the schedule in `./github/workflows/take-orders.yaml` by modifying the cron syntax, by default it is set to run every 5 minutes.
+Please be aware that github scheduled workflows are not guaranteed to run at exact schedule because of github resource availability.
+<br>
+
+
+# Advanced Setup
+The following will give you the full configuration capabilities:
+
 ## Adding Orders
 Make a json file (optionaly named `orders.json`) and specify the desired order(s) in it. If the file is in any directory other than root directory of this repo then you need to specify its path when executing the `node run.js` using `-o` flag.<br>
 `validInputs` and `validOutputs` should only have one item each, if not, only the first item of each going to be used 
@@ -147,8 +164,8 @@ Optionally with providing `--use-etherscan` or `--etherscan-key` you can force t
 <br>
 
 ## Running in Github Actions
-The process can be run in a github actions as a workflow, the configuration for it is available in `./.github/take-orders.yaml`. The schedule for triggering can be modified in the mentioned file with cron syntax (or any other form of triggering event for a github action of your choice).<br>
-Please be aware that github only allows scheduled workflows to run at most every 5 minutes and it is neither garaunteed to run at specified schedule due to github resources being reserved, so sometimes it can take 10 or 15 or even more minutes longer than specified schedule time to run, therefore, it's not recommended to use GitHub Actions scheduled workflows for production tasks that require execution guarantee, please read [here](https://upptime.js.org/blog/2021/01/22/github-actions-schedule-not-working/) for more info.
+The process can be run in a github actions as a workflow, the configuration for it is available in `./.github/workflows/take-orders.yaml`. The schedule for triggering can be modified in the mentioned file with cron syntax (or any other form of triggering event for a github action of your choice).<br>
+Please be aware that github only allows scheduled workflows to run at most every 5 minutes and it is neither guaranteed to run at specified schedule due to github resources being reserved, so sometimes it can take 10 or 15 or even more minutes longer than specified schedule time to run, therefore, it's not recommended to use GitHub Actions scheduled workflows for production tasks that require execution guarantee, please read [here](https://upptime.js.org/blog/2021/01/22/github-actions-schedule-not-working/) for more info.
 
 ## Running Locally
 You need NodeJS installed locally on your machine.<br>
