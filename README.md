@@ -57,7 +57,7 @@ Configurations can be set in the files and/or as cli arguments when executing th
         Private key of wallet that performs the transactions. Will override the 'WALLET_KEY' in '.env' file.
 
         -r, -R, --rpc           <rpc url>
-        RPC URL that will be provider for interacting with ethereum network. Will override the 'RPC_URL' in '.env' file.
+        RPC URL that will be provider for interacting with evm. Will override the 'RPC_URL' in '.env' file.
 
         -o, -O, --orders        <path/to/orders.json>
         Path (relative or absolute) to the file that holds the orders to operate on. If provided will ignore './orders.json' file.
@@ -69,7 +69,7 @@ Configurations can be set in the files and/or as cli arguments when executing th
         Address of the deployed arb contract. Will override 'arbAddress' field in './config.json' file.
 
         --etherscan-key         <optionaly etherscan api key>
-        Etherscan API key to read contract ABI from etherscan. Will ignore './abis' folder and '*SCAN_API_KEY' in '.env'. Contracts need to be verified. 
+        Etherscan API key to required to read contract ABI from etherscan of the operating evm network. Will ignore './abis' folder and '*SCAN_API_KEY' in '.env'. Contracts need to be verified. 
 
         --use-etherscan         Forces to read contract abi from etherscan with provided keys in '.env' file. Contracts need to be verified.
 
