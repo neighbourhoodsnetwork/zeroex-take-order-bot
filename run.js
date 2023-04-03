@@ -125,12 +125,12 @@ const getEtherscanBaseURL = (chainId) => {
 const getEtherscanKey = (chainId) => { 
     if (chainId === 1)          return process.env.ETHERSCAN_API_KEY;
     if (chainId === 5)          return process.env.ETHERSCAN_API_KEY;
-    if (chainId === 10)         return process.env.OPTIMISM_API_KEY;
-    if (chainId === 56)         return process.env.BSC_API_KEY;
+    if (chainId === 10)         return process.env.ETHERSCAN_API_KEY;
+    if (chainId === 56)         return process.env.BSCSCAN_API_KEY;
     if (chainId === 137)        return process.env.POLYGONSCAN_API_KEY;
-    if (chainId === 250)        return process.env.FTM_API_KEY;
-    if (chainId === 42161)      return process.env.ARBITRUM_API_KEY;
-    if (chainId === 42220)      return process.env.CELO_API_KEY;
+    if (chainId === 250)        return process.env.FTMSCAN_API_KEY;
+    if (chainId === 42161)      return process.env.ARBISCAN_API_KEY;
+    if (chainId === 42220)      return process.env.CELOSCAN_API_KEY;
     if (chainId === 43114)      return process.env.SNOWTRACE_API_KEY;
     if (chainId === 524289)     return process.env.POLYGONSCAN_API_KEY;
     return "";
@@ -252,11 +252,11 @@ const main = async() => {
 
     example:
 
-        node ./run.js -k 12345abcd -r 'https://rpc-url.com/'
+        node ./run.js -k 12345...abcd -r 'https://rpc-url.com/'
         node ./run.js --use-etherscan
         node ./run.js --etherscan-key 12345abcd
-        node ./run.js -o '../../myOrders.json' --orderbook 0x1234abcd
-        node ./run.js -k 12345abcd -r 'https://rpc-url.api.com/' -o '../../myOrders.json' --orderbook 0x1234abcd --arb 0xabcd1234
+        node ./run.js -o '../../myOrders.json' --ob-add 0x123...4abcd
+        node ./run.js -k 12345...abcd -r 'https://rpc-url.api.com/' --ob-add 0x1234...abcd --arb-add 0xabcd...1234 --use-etherscan
 
 
     options:
@@ -286,7 +286,7 @@ const main = async() => {
     
     * Configuration can be set through '.env', 'orders.json' and 'config.json' files as well, which are default places the bot looks 
       for the required arguments, however they will be ignored if cli arguments are provided for their counterparts in those files.
-      For example if the orderbook address (--orderbook option) is provided, the orderbook address in 'config.json' file will be ignored.
+      For example if the orderbook address (--ob-add option) is provided, the orderbook address in 'config.json' file will be ignored.
       Please read 'README.md' for more info.
 
     ** Path can be relative(from the current working directory) or absolute:
@@ -311,7 +311,7 @@ const main = async() => {
         const arbAdd = args.arb ? args.arb : configData?.arbAddress;
         if (!obAdd) throw "Undefined orderbook contract address";
         if (!arbAdd) throw "Undefined arb contract address";
-        if (!chainId) throw "Undefined operating network";
+        if (!chainId) throw "0x is not operating on the specified network!";
         if (!configData?.apiUrl) throw "Undefined 0x api url";
         if (!orders || !Array.isArray(orders)) throw "Invalid specified orders";
         if (!ajv.compile(ordersSchema)(orders)) throw "Invalid specified orders";
@@ -572,7 +572,7 @@ const main = async() => {
                 || err.startsWith("Invalid wallet private key") 
                 || err.startsWith("Undefined orderbook contract address") 
                 || err.startsWith("Undefined arb contract address") 
-                || err.startsWith("Undefined operating network") 
+                || err.startsWith("0x is not operating on the specified network!") 
                 || err.startsWith("Undefined 0x api url") 
                 || err.startsWith("Invalid specified orders") 
             )

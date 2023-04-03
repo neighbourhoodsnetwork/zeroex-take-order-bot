@@ -34,10 +34,9 @@ Optionally you can set up your orders details in another file and pass the file 
 <br>
 
 ## Configurations
-Configurations can be set in the files and/or as cli arguments when executing the `node ./run.js`. If any cli argument is passed on, it will override their counterparts specified in the files.
+Configurations can be set in the files and/or as cli arguments when executing the `node ./run.js` command. If any cli argument is passed on, it will override their counterparts specified in the files.
 
 ## Configuration through CLI
-Configurations can be passed on as cli arguments to the bot. CLI arguments are prioritized over files configurations.
 
     usage:    
 
@@ -45,11 +44,11 @@ Configurations can be passed on as cli arguments to the bot. CLI arguments are p
 
     example:
 
-        node ./run.js -k 12345abcd -r 'https://rpc-url.com/'
+        node ./run.js -k 12345...abcd -r 'https://rpc-url.com/'
         node ./run.js --use-etherscan
         node ./run.js --etherscan-key 12345abcd
-        node ./run.js -o '../../myOrders.json' --orderbook 0x1234abcd
-        node ./run.js -k 12345abcd -r 'https://rpc-url.api.com/' -o '../../myOrders.json' --orderbook 0x1234abcd --arb 0xabcd1234
+        node ./run.js -o '../../myOrders.json' --ob-add 0x123...4abcd
+        node ./run.js -k 12345...abcd -r 'https://rpc-url.api.com/' --ob-add 0x1234...abcd --arb-add 0xabcd...1234 --use-etherscan
 
 
     options:
@@ -79,7 +78,7 @@ Configurations can be passed on as cli arguments to the bot. CLI arguments are p
     
     * Configuration can be set through '.env', 'orders.json' and 'config.json' files as well, which are default places the bot looks 
       for the required arguments, however they will be ignored if cli arguments are provided for their counterparts in those files.
-      For example if the orderbook address (--orderbook option) is provided, the orderbook address in 'config.json' file will be ignored.
+      For example if the orderbook address (--ob-add flag) is provided, the orderbook address in 'config.json' file will be ignored.
       Please read 'README.md' for more info.
 
     ** Path can be relative(from the current working directory) or absolute:
@@ -88,21 +87,20 @@ Configurations can be passed on as cli arguments to the bot. CLI arguments are p
 <br>
 
 ### Configuration through Files
-Create a `.env` file and populate it with following:
+Create a `.env` file and populate it with following (see `./example.env` for reference):
 ```bash
 WALLET_KEY="<private-key-of-bot-account>"
 
 RPC_URL="<rpc-url-for-network>"
 
-# etherscan api keys (only needed if "--use-etherscan" flag is passed on cli)
-POLYGONSCAN_API_KEY=""
-ETHERSCAN_API_KEY=""
-SNOWTRACE_API_KEY=""
-BSC_API_KEY=""
-ARBITRUM_API_KEY=""
-CELO_API_KEY=""
-OPTIMISM_API_KEY=""
-FTM_API_KEY=""
+# etherscan api keys (optional, only needed if "--use-etherscan" flag is used in cli)
+ETHERSCAN_API_KEY=""        # for ethereum, goerli and optimisim networks
+POLYGONSCAN_API_KEY=""      # for polygon and mumbai networks
+SNOWTRACE_API_KEY=""        # for avalanche network
+BSCSCAN_API_KEY=""          # for binance smart chain network
+ARBISCAN_API_KEY=""         # for arbitrum network
+CELOSCAN_API_KEY=""         # for celo network
+FTMSCAN_API_KEY=""          # for fantom network
 ```
 `WALLET_KEY` will be used as the wallet that submits the transactions and `RPC_URL` will be the provider required for submitting transactions.<br>
 All these values can alternatively be provided through cli with thier corresponding flag, please see CLI section for more info.
