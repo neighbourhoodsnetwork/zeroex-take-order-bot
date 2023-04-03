@@ -166,7 +166,9 @@ Optionally with providing `--use-etherscan` or `--etherscan-key` you can force t
 
 ## Running in Github Actions
 The process can be run in a github actions as a workflow, the configuration for it is available in `./.github/workflows/take-orders.yaml`. The schedule for triggering can be modified in the mentioned file with cron syntax (or any other form of triggering event for a github action of your choice).<br>
-Please be aware that github only allows scheduled workflows to run at most every 5 minutes and it is neither guaranteed to run at specified schedule due to github resources being reserved, so sometimes it can take 10 or 15 or even more minutes longer than specified schedule time to run, therefore, it's not recommended to use GitHub Actions scheduled workflows for production tasks that require execution guarantee, please read [here](https://upptime.js.org/blog/2021/01/22/github-actions-schedule-not-working/) for more info.
+Please be aware that github only allows scheduled workflows to run at most every 5 minutes and it is neither guaranteed to run at specified schedule due to github resources being reserved, so sometimes it can take 10 or 15 or even more minutes longer than specified schedule time to run, therefore, it's not recommended to use GitHub Actions scheduled workflows for production tasks that require execution guarantee, please read [here](https://upptime.js.org/blog/2021/01/22/github-actions-schedule-not-working/) for more info.<br>
+You also need to enable this workflow in case you have forked this repository.
+<br>
 
 ## Running Locally
 You need NodeJS installed locally on your machine.<br>
