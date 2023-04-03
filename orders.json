@@ -1,4 +1,4 @@
-{
+[{
   "sender": "0xE246F86675c73E339cB566383BA9d101959da3e1",
   "expressionDeployer": "0xfdD0e5E4E31854A86f8173c18a8102377C454938",
   "order": [
@@ -34,4 +34,4 @@
     "type": "BigNumber",
     "hex": "0x42d1daae9560744bf0d3dda296266cdc0af0f23a93b48831d5953cc6688ecf07"
   }
-}
+}]
