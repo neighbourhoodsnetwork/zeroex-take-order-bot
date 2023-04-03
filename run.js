@@ -547,9 +547,16 @@ const main = async() => {
                                     { gasPrice: txQuote.gasPrice }
                                 );
                                 console.log(ETHERSCAN_TX_PAGE[chainId] + tx.hash, "\n");
-                                console.log("Transaction submitted successfully to the network, see the link above for details, checking next order...\n");
-                                // console.log(await tx.wait(), "\n");
-                                // console.log("Order cleared successfully, checking next order...\n");
+                                console.log("Transaction submitted successfully to the network, see the link above for details, waiting for tx to mine...\n");
+                                try {
+                                    await tx.wait();
+                                    console.log(`Clear amount: ${quoteAmount.toString()}`);
+                                    console.log(`Clear guaranteed price: ${txQuote.guaranteedPrice}`);
+                                    console.log("Order cleared successfully, checking next order...\n");
+                                }
+                                catch (_e) {
+                                    console.log("Order did not clear, checking next order...");
+                                }
                             }
                             catch (_e) {
                                 console.log(_e, "\n");
