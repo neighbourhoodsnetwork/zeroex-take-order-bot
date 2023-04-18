@@ -250,17 +250,17 @@
                       "type": "address"
                     },
                     {
-                      "internalType": "bytes",
-                      "name": "signature",
-                      "type": "bytes"
-                    },
-                    {
                       "internalType": "uint256[]",
                       "name": "context",
                       "type": "uint256[]"
+                    },
+                    {
+                      "internalType": "bytes",
+                      "name": "signature",
+                      "type": "bytes"
                     }
                   ],
-                  "internalType": "struct SignedContext[]",
+                  "internalType": "struct SignedContextV1[]",
                   "name": "signedContext",
                   "type": "tuple[]"
                 }
@@ -347,7 +347,7 @@
       "name": "orderBook",
       "outputs": [
         {
-          "internalType": "contract IOrderBookV1",
+          "internalType": "contract IOrderBookV2",
           "name": "",
           "type": "address"
         }
