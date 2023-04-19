@@ -3,9 +3,9 @@
     "owner": "0xf098172786a87FA7426eA811Ff25D31D599f766D",
     "handleIO": true,
     "evaluable": {
-      "interpreter": "0x3c088D52176CEc895A24B0e5Ff77397C61Fe76D8",
-      "store": "0xa0F549dfA50ccFB06B1F32Ce22acdfCB107465C6",
-      "expression": "0x18Bc034Eff3747dA767066F0aDd1b094688a3522"
+      "interpreter": "0x0Ce127De8C5Cc5Cc8DE2aeB8449c6ebb3b123D2A",
+      "store": "0x98d4E4f034E830FFaca1ddb0e1e6dAC655D6C994",
+      "expression": "0xfd3551Fd5AB8472fca6115033314Ec7859014dd6"
     },
     "validInputs": [
       {
