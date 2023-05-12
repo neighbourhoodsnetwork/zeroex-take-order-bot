@@ -542,6 +542,7 @@ const main = async() => {
                             try {
                                 const tx = await arb.arb(
                                     takeOrdersConfigStruct,
+                                    0, // we want all the orders to go through 
                                     txQuote.allowanceTarget,
                                     txQuote.data,
                                     { gasPrice: txQuote.gasPrice }
